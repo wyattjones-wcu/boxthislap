@@ -211,11 +211,18 @@ main {
   display: grid;
   gap: 24px;
   grid-template-columns: 1fr;
+  margin: 0 auto;
+  max-width: 760px;
 }
 
 .image-card,
 .result-card {
   overflow: hidden;
+}
+
+.result-card {
+  display: grid;
+  justify-items: center;
 }
 
 .image-card h2,
@@ -248,6 +255,7 @@ main {
   background: #eef2f7;
   display: block;
   height: auto;
+  max-width: 100%;
   width: 100%;
 }
 
@@ -296,6 +304,10 @@ tr:last-child td {
 }
 
 @media (max-width: 760px) {
+  main {
+    padding: 28px 12px 56px;
+  }
+
   .topbar,
   .hero {
     display: block;
@@ -313,5 +325,13 @@ tr:last-child td {
   .results-grid,
   .tomorrow-grid {
     grid-template-columns: 1fr;
+  }
+
+  .results-grid {
+    gap: 16px;
+  }
+
+  .card-body {
+    padding: 12px 14px;
   }
 }
