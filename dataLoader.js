@@ -13,7 +13,13 @@ export async function loadJson(path) {
     throw new Error(`Failed to load JSON from ${path}: ${response.status}`);
   }
 
-  return response.json();
+  const text = await response.text();
+
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    throw new Error(`Failed to parse JSON from ${path}: ${error.message}`);
+  }
 }
 
 export async function loadCsv(url) {

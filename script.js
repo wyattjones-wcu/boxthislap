@@ -1,4 +1,4 @@
-import { loadSiteData } from "./dataLoader.js";
+import { loadMatches, loadPlayers } from "./dataLoader.js";
 
 const pageLinks = document.querySelectorAll("[data-page-link]");
 const pages = document.querySelectorAll("[data-page]");
@@ -46,15 +46,28 @@ window.addEventListener("hashchange", () => {
 
 showPage(window.location.hash.replace("#", "") || "results");
 
-loadSiteData()
-  .then((data) => {
-    window.boxThisLapData = data;
-    renderTestingPlayers(data.players);
-    console.info("Box This Lap data loaded", data);
+const siteData = {};
+window.boxThisLapData = siteData;
+
+loadPlayers()
+  .then((players) => {
+    siteData.players = players;
+    renderTestingPlayers(players);
+    console.info("Box This Lap player data loaded", players);
   })
   .catch((error) => {
     renderTestingError(error);
-    console.error("Box This Lap data failed to load", error);
+    console.error("Box This Lap player data failed to load", error);
+  });
+
+loadMatches()
+  .then((matches) => {
+    siteData.matches = matches;
+    console.info("Box This Lap match data loaded", matches);
+  })
+  .catch((error) => {
+    siteData.matchesError = error;
+    console.error("Box This Lap match data failed to load", error);
   });
 
 function renderTestingPlayers(players) {
