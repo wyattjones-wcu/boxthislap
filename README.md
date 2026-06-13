@@ -1,12 +1,12 @@
 # Box This Lap
 
-A self-contained static website for GitHub Pages.
+A self-contained static website for World Cup result images and score tables on GitHub Pages.
 
 ## Local Files
 
-- `index.html` contains the pages, tabs, gallery placeholders, and sample table.
+- `index.html` contains the Tomorrow tab, World Cup result image page, Player Scores table, and Manager Scores table.
 - `styles.css` contains the responsive layout and visual styling.
-- `script.js` handles tab switching and hash-based page navigation.
+- `script.js` handles hash-based tab navigation.
 
 ## GitHub Pages
 

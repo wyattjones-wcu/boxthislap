@@ -3,137 +3,168 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Box This Lap</title>
+    <title>Box This Lap | World Cup Results</title>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <header class="site-header">
       <nav class="topbar" aria-label="Primary">
-        <a class="brand" href="#home" data-page-link="home">Box This Lap</a>
-        <div class="nav-links">
-          <a href="#home" data-page-link="home">Home</a>
-          <a href="#gallery" data-page-link="gallery">Gallery</a>
-          <a href="#tables" data-page-link="tables">Tables</a>
-          <a href="#about" data-page-link="about">About</a>
+        <a class="brand" href="#tomorrow" data-page-link="tomorrow">Box This Lap</a>
+        <div class="nav-links" role="tablist" aria-label="Site sections">
+          <a href="#tomorrow" data-page-link="tomorrow" role="tab">Tomorrow</a>
+          <a href="#results" data-page-link="results" role="tab">World Cup Results</a>
+          <a href="#player-scores" data-page-link="player-scores" role="tab">Player Scores</a>
+          <a href="#manager-scores" data-page-link="manager-scores" role="tab">Manager Scores</a>
         </div>
       </nav>
     </header>
 
     <main>
-      <section class="page is-active" id="home" data-page="home">
+      <section class="page is-active" id="tomorrow" data-page="tomorrow">
         <div class="hero">
           <div>
-            <p class="eyebrow">Motorsport notes, visuals, and data</p>
-            <h1>Box This Lap</h1>
+            <p class="eyebrow">Up next</p>
+            <h1>Tomorrow</h1>
             <p class="lede">
-              A self-contained GitHub Pages site for race weekend images,
-              sectioned notes, and simple data tables.
+              The first stop for upcoming World Cup fixtures, planned result
+              images, and the score updates to watch next.
             </p>
           </div>
-          <div class="hero-panel" aria-label="Featured stat">
-            <span class="panel-label">Next Build</span>
-            <strong>Pages-ready</strong>
-            <span>Static HTML, CSS, and JavaScript.</span>
-          </div>
+          <aside class="hero-panel" aria-label="Tomorrow summary">
+            <span class="panel-label">Next Update</span>
+            <strong>Fixture slate</strong>
+            <span>Add matchups, kickoff times, and scorekeeping notes here.</span>
+          </aside>
         </div>
 
-        <div class="tabs" role="tablist" aria-label="Homepage sections">
-          <button class="tab is-active" type="button" role="tab" aria-selected="true" data-tab="overview">Overview</button>
-          <button class="tab" type="button" role="tab" aria-selected="false" data-tab="features">Features</button>
-          <button class="tab" type="button" role="tab" aria-selected="false" data-tab="next">Next Steps</button>
-        </div>
-
-        <div class="tab-panel is-active" data-tab-panel="overview">
-          <h2>Built for a compact racing site</h2>
-          <p>
-            Use this front page for highlights, race notes, links, or a short
-            intro to the project. Everything runs without a backend.
-          </p>
-        </div>
-        <div class="tab-panel" data-tab-panel="features">
-          <h2>Room for images, pages, tabs, and tables</h2>
-          <p>
-            The structure is intentionally plain so it can grow into a richer
-            site without needing a framework or build step.
-          </p>
-        </div>
-        <div class="tab-panel" data-tab-panel="next">
-          <h2>Ready for your content</h2>
-          <p>
-            Add images to an assets folder, replace the sample table, and enable
-            GitHub Pages from the repository settings.
-          </p>
-        </div>
-      </section>
-
-      <section class="page" id="gallery" data-page="gallery">
-        <div class="section-heading">
-          <p class="eyebrow">Gallery</p>
-          <h1>Image Slots</h1>
-        </div>
-        <div class="gallery-grid">
-          <article class="image-card">
-            <div class="image-placeholder">Image</div>
-            <h2>Race Weekend</h2>
-            <p>Add track photos, car shots, charts, or screenshots here.</p>
+        <div class="tomorrow-grid">
+          <article class="summary-card">
+            <h2>Matches</h2>
+            <p>List tomorrow's World Cup matches and any result images you expect to add.</p>
           </article>
-          <article class="image-card">
-            <div class="image-placeholder">Image</div>
-            <h2>Strategy Notes</h2>
-            <p>Pair visuals with commentary, weather, tires, and stint notes.</p>
+          <article class="summary-card">
+            <h2>Players to Watch</h2>
+            <p>Track the players whose scores may swing the leaderboard.</p>
           </article>
-          <article class="image-card">
-            <div class="image-placeholder">Image</div>
-            <h2>Data Snapshot</h2>
-            <p>Use this space for timing graphics or exported visualizations.</p>
+          <article class="summary-card">
+            <h2>Managers to Watch</h2>
+            <p>Note lineup choices, bonus opportunities, and key matchups.</p>
           </article>
         </div>
       </section>
 
-      <section class="page" id="tables" data-page="tables">
+      <section class="page" id="results" data-page="results">
         <div class="section-heading">
-          <p class="eyebrow">Tables</p>
-          <h1>Sample Session Data</h1>
+          <p class="eyebrow">Main page</p>
+          <h1>World Cup Results</h1>
+          <p class="body-copy">
+            Use these slots for images of completed results. Replace each
+            placeholder with an image in the repository when the real result
+            graphics are ready.
+          </p>
+        </div>
+
+        <div class="results-grid">
+          <article class="result-card">
+            <div class="image-placeholder">Result Image</div>
+            <div class="card-body">
+              <h2>Group Stage</h2>
+              <p>Scores, standings, or matchday result graphics.</p>
+            </div>
+          </article>
+          <article class="result-card">
+            <div class="image-placeholder">Result Image</div>
+            <div class="card-body">
+              <h2>Knockout Round</h2>
+              <p>Bracket images, match results, and progression snapshots.</p>
+            </div>
+          </article>
+          <article class="result-card">
+            <div class="image-placeholder">Result Image</div>
+            <div class="card-body">
+              <h2>Final Table</h2>
+              <p>Final rankings, points totals, or championship graphics.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="player-scores" data-page="player-scores">
+        <div class="section-heading">
+          <p class="eyebrow">Leaderboard</p>
+          <h1>Player Scores</h1>
         </div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Session</th>
-                <th>Focus</th>
-                <th>Status</th>
+                <th>Player</th>
+                <th>Team</th>
+                <th>Matches</th>
+                <th>Points</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Practice</td>
-                <td>Baseline setup</td>
-                <td>Draft</td>
+                <td>Player One</td>
+                <td>TBD</td>
+                <td>0</td>
+                <td>0</td>
               </tr>
               <tr>
-                <td>Qualifying</td>
-                <td>Single-lap pace</td>
-                <td>Pending</td>
+                <td>Player Two</td>
+                <td>TBD</td>
+                <td>0</td>
+                <td>0</td>
               </tr>
               <tr>
-                <td>Race</td>
-                <td>Strategy review</td>
-                <td>Pending</td>
+                <td>Player Three</td>
+                <td>TBD</td>
+                <td>0</td>
+                <td>0</td>
               </tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <section class="page" id="about" data-page="about">
+      <section class="page" id="manager-scores" data-page="manager-scores">
         <div class="section-heading">
-          <p class="eyebrow">About</p>
-          <h1>A small static site</h1>
+          <p class="eyebrow">Leaderboard</p>
+          <h1>Manager Scores</h1>
         </div>
-        <p class="body-copy">
-          This repository can be hosted directly by GitHub Pages. It does not
-          need npm, a database, or a deployment server.
-        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Manager</th>
+                <th>Squad</th>
+                <th>Rank</th>
+                <th>Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Manager One</td>
+                <td>TBD</td>
+                <td>1</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>Manager Two</td>
+                <td>TBD</td>
+                <td>2</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>Manager Three</td>
+                <td>TBD</td>
+                <td>3</td>
+                <td>0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
     </main>
 
