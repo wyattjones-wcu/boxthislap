@@ -2,6 +2,7 @@
     {
         "Id": 4,
         "Date": "2026-06-13",
+        "Time": "3 PM",
         "Home": "Qatar",
         "Away": "Switzerland",
         "Data": {
@@ -11,6 +12,7 @@
     {
         "Id": 5,
         "Date": "2026-06-13",
+        "Time": "6 PM",
         "Home": "Brazil",
         "Away": "Morocco",
         "Data": {
@@ -23,6 +25,7 @@
     {
         "Id": 6,
         "Date": "2026-06-13",
+        "Time": "9 PM",
         "Home": "Haiti",
         "Away": "Scotland",
         "Data": {
@@ -33,6 +36,7 @@
     {
         "Id": 7,
         "Date": "2026-06-13",
+        "12 AM",
         "Home": "Australia",
         "Away": "Türkiye",
         "Data": {
