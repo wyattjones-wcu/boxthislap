@@ -10,6 +10,7 @@ const tomorrowMatchList = document.querySelector("#tomorrow-match-list");
 const matchdaySelect = document.querySelector("#matchday-select");
 const matchdayMatchList = document.querySelector("#matchday-match-list");
 const playerChampionshipRows = document.querySelector("#player-championship-rows");
+const nationsLeagueRows = document.querySelector("#nations-league-rows");
 const testingPlayerRows = document.querySelector("#testing-player-rows");
 
 function showPage(pageName, options = {}) {
@@ -127,6 +128,17 @@ loadSheet("playerPerformances")
   .catch((error) => {
     renderPlayerChampionshipError(error);
     console.error("Box This Lap player performance data failed to load", error);
+  });
+
+loadSheet("matchResults")
+  .then((results) => {
+    siteData.matchResults = results;
+    renderNationsLeague(results);
+    console.info("Box This Lap match result data loaded", results);
+  })
+  .catch((error) => {
+    renderNationsLeagueError(error);
+    console.error("Box This Lap match result data failed to load", error);
   });
 
 loadMatches()
@@ -403,6 +415,119 @@ function renderPlayerChampionshipError(error) {
   `;
 }
 
+function renderNationsLeague(results) {
+  if (!nationsLeagueRows) {
+    return;
+  }
+
+  const rows = getNationsLeagueRows(results);
+
+  if (rows.length === 0) {
+    nationsLeagueRows.innerHTML = `<tr><td class="table-message" colspan="5">No Nations League results found.</td></tr>`;
+    return;
+  }
+
+  nationsLeagueRows.innerHTML = rows.map((nation, index) => {
+    return `
+      <tr>
+        <td data-label="Rank">${index + 1}</td>
+        <td data-label="Nation">${escapeHtml(nation.name)}</td>
+        <td data-label="Record">${escapeHtml(formatRecord(nation))}</td>
+        <td data-label="Matches">${escapeHtml(formatMatchCount(nation.matches))}</td>
+        <td data-label="Points">${escapeHtml(formatPoints(nation.points))}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function getNationsLeagueRows(results) {
+  const nations = new Map();
+
+  for (const result of results) {
+    const team = result.Team;
+    const opponent = result.Opponent;
+    const outcome = String(result.Result || "").trim().toLowerCase();
+
+    if (!team || !opponent || !outcome) {
+      continue;
+    }
+
+    const teamRow = getNationStanding(nations, team);
+    const opponentRow = getNationStanding(nations, opponent);
+    const winnerPoints = getWinnerPoints(result);
+    const penaltyLoserPoints = isPenaltyResult(result) ? 2 : 0;
+
+    teamRow.matches += 1;
+    opponentRow.matches += 1;
+
+    if (outcome === "win") {
+      teamRow.wins += 1;
+      opponentRow.losses += 1;
+      teamRow.points += winnerPoints;
+      opponentRow.points += penaltyLoserPoints;
+      continue;
+    }
+
+    if (outcome === "lose" || outcome === "loss") {
+      teamRow.losses += 1;
+      opponentRow.wins += 1;
+      teamRow.points += penaltyLoserPoints;
+      opponentRow.points += winnerPoints;
+      continue;
+    }
+
+    if (outcome === "draw" || outcome === "tie") {
+      teamRow.draws += 1;
+      opponentRow.draws += 1;
+      teamRow.points += 1;
+      opponentRow.points += 1;
+    }
+  }
+
+  return [...nations.values()]
+    .filter((nation) => nation.matches > 0)
+    .sort(compareNationStandings);
+}
+
+function getNationStanding(nations, name) {
+  if (!nations.has(name)) {
+    nations.set(name, {
+      draws: 0,
+      losses: 0,
+      matches: 0,
+      name,
+      points: 0,
+      wins: 0,
+    });
+  }
+
+  return nations.get(name);
+}
+
+function compareNationStandings(firstNation, secondNation) {
+  if (secondNation.points !== firstNation.points) {
+    return secondNation.points - firstNation.points;
+  }
+
+  if (secondNation.wins !== firstNation.wins) {
+    return secondNation.wins - firstNation.wins;
+  }
+
+  return firstNation.name.localeCompare(secondNation.name);
+}
+
+function renderNationsLeagueError(error) {
+  if (!nationsLeagueRows) {
+    return;
+  }
+
+  nationsLeagueRows.innerHTML = `
+    <tr>
+      <td class="table-message" colspan="5">Unable to load Nations League results: ${escapeHtml(error.message)}</td>
+    </tr>
+  `;
+}
+
 function parsePoints(value) {
   if (value === undefined || value === null || value === "") {
     return 0;
@@ -417,6 +542,25 @@ function formatPoints(value) {
 
 function formatMatchCount(value) {
   return Number(value) === 1 ? "1 match" : `${value} matches`;
+}
+
+function formatRecord(nation) {
+  return `${nation.wins}-${nation.draws}-${nation.losses}`;
+}
+
+function isPenaltyResult(result) {
+  return String(result.Penalties || "").trim() !== "";
+}
+
+function getFallbackWinPoints(result) {
+  return String(result.Stage || "").toLowerCase().includes("group") ? 3 : 5;
+}
+
+function getWinnerPoints(result) {
+  const rawPoints = String(result.Points ?? "").trim();
+  const points = parsePoints(rawPoints);
+
+  return rawPoints && Number.isFinite(points) ? points : getFallbackWinPoints(result);
 }
 
 function renderTestingPlayers(players) {
