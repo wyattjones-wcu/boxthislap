@@ -1,9 +1,19 @@
-const PLAYER_SHEET_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlUykKGjYLQY5KqHJt0uF-b3HmhZZSAYCgZdF2L8cRxTlP64gPOWp7uiqC4zG8IlSy3eODn4vybN56/pub?gid=936826783&single=true&output=csv";
+const GOOGLE_SHEET_BASE_URL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlUykKGjYLQY5KqHJt0uF-b3HmhZZSAYCgZdF2L8cRxTlP64gPOWp7uiqC4zG8IlSy3eODn4vybN56/pub";
 
 export const DATA_SOURCES = {
   matches: "matches.json",
-  players: PLAYER_SHEET_URL,
+  sheets: {
+    data: buildPublishedCsvUrl("1157515704"),
+    managers: buildPublishedCsvUrl("0"),
+    teams: buildPublishedCsvUrl("1758025145"),
+    teamDraft: buildPublishedCsvUrl("1723208765"),
+    players: buildPublishedCsvUrl("936826783"),
+    playerDraft: buildPublishedCsvUrl("642225169"),
+    matchResults: buildPublishedCsvUrl("396388040"),
+    playerPerformances: buildPublishedCsvUrl("2122871848"),
+    standings: buildPublishedCsvUrl("705930353"),
+  },
 };
 
 export async function loadJson(path) {
@@ -37,13 +47,31 @@ export async function loadMatches() {
 }
 
 export async function loadPlayers() {
-  const rows = await loadCsv(DATA_SOURCES.players);
+  const rows = await loadSheet("players");
   return rows.map(normalizePlayerRow);
 }
 
+export function loadSheet(sheetName) {
+  const url = DATA_SOURCES.sheets[sheetName];
+
+  if (!url) {
+    throw new Error(`Unknown sheet source: ${sheetName}`);
+  }
+
+  return loadCsv(url);
+}
+
+export async function loadSheets(sheetNames = Object.keys(DATA_SOURCES.sheets)) {
+  const entries = await Promise.all(
+    sheetNames.map(async (sheetName) => [sheetName, await loadSheet(sheetName)])
+  );
+
+  return Object.fromEntries(entries);
+}
+
 export async function loadSiteData() {
-  const [matches, players] = await Promise.all([loadMatches(), loadPlayers()]);
-  return { matches, players };
+  const [matches, sheets] = await Promise.all([loadMatches(), loadSheets()]);
+  return { matches, sheets, players: sheets.players.map(normalizePlayerRow) };
 }
 
 export function parseCsv(csvText) {
@@ -74,6 +102,10 @@ function normalizePlayerRow(row) {
     drafted: row.Drafted,
     raw: row,
   };
+}
+
+function buildPublishedCsvUrl(gid) {
+  return `${GOOGLE_SHEET_BASE_URL}?gid=${encodeURIComponent(gid)}&single=true&output=csv`;
 }
 
 function stripBom(text) {
