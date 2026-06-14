@@ -349,7 +349,7 @@ function renderPlayerChampionship(performances) {
         <td data-label="Rank">${index + 1}</td>
         <td data-label="Player">${escapeHtml(player.name)}</td>
         <td data-label="Team">${escapeHtml(player.team)}</td>
-        <td data-label="Matches">${escapeHtml(player.matches)}</td>
+        <td data-label="Matches">${escapeHtml(formatMatchCount(player.matches))}</td>
         <td data-label="Points">${escapeHtml(formatPoints(player.points))}</td>
       </tr>
     `;
@@ -413,6 +413,10 @@ function parsePoints(value) {
 
 function formatPoints(value) {
   return Number.isInteger(value) ? String(value) : value.toFixed(1);
+}
+
+function formatMatchCount(value) {
+  return Number(value) === 1 ? "1 match" : `${value} matches`;
 }
 
 function renderTestingPlayers(players) {
