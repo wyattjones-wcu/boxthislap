@@ -134,7 +134,7 @@ function renderMatchRows(pairs) {
   return pairs.map(([name, manager]) => {
     return `
       <tr>
-        <th scope="row">${escapeHtml(name)}</th>
+        <th scope="row">${formatDataName(name)}</th>
         <td>${escapeHtml(manager)}</td>
       </tr>
     `;
@@ -268,4 +268,8 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function formatDataName(value) {
+  return escapeHtml(value).replaceAll("\n", "<br>");
 }
