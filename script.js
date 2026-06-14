@@ -1,4 +1,4 @@
-import { loadMatches, loadPlayers } from "./dataLoader.js";
+import { loadMatches, loadPlayers, loadSheet } from "./dataLoader.js";
 
 const pageLinks = document.querySelectorAll("[data-page-link]");
 const pages = document.querySelectorAll("[data-page]");
@@ -8,6 +8,7 @@ const todayMatchList = document.querySelector("#today-match-list");
 const tomorrowMatchList = document.querySelector("#tomorrow-match-list");
 const matchdaySelect = document.querySelector("#matchday-select");
 const matchdayMatchList = document.querySelector("#matchday-match-list");
+const playerChampionshipRows = document.querySelector("#player-championship-rows");
 const testingPlayerRows = document.querySelector("#testing-player-rows");
 
 function showPage(pageName) {
@@ -62,6 +63,17 @@ loadPlayers()
   .catch((error) => {
     renderTestingError(error);
     console.error("Box This Lap player data failed to load", error);
+  });
+
+loadSheet("playerPerformances")
+  .then((performances) => {
+    siteData.playerPerformances = performances;
+    renderPlayerChampionship(performances);
+    console.info("Box This Lap player performance data loaded", performances);
+  })
+  .catch((error) => {
+    renderPlayerChampionshipError(error);
+    console.error("Box This Lap player performance data failed to load", error);
   });
 
 loadMatches()
@@ -264,6 +276,90 @@ function formatMatchdayLabel(dateKey) {
     timeZone: "UTC",
     weekday: "short",
   }).format(date);
+}
+
+function renderPlayerChampionship(performances) {
+  if (!playerChampionshipRows) {
+    return;
+  }
+
+  const rows = getPlayerChampionshipRows(performances);
+
+  if (rows.length === 0) {
+    playerChampionshipRows.innerHTML = `<tr><td colspan="5">No player performance data found.</td></tr>`;
+    return;
+  }
+
+  playerChampionshipRows.innerHTML = rows.map((player, index) => {
+    return `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${escapeHtml(player.name)}</td>
+        <td>${escapeHtml(player.team)}</td>
+        <td>${escapeHtml(player.matches)}</td>
+        <td>${escapeHtml(formatPoints(player.points))}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function getPlayerChampionshipRows(performances) {
+  const players = new Map();
+
+  for (const performance of performances) {
+    const playerId = performance["Player ID"] || performance.Name;
+    const points = parsePoints(performance.Points);
+
+    if (!playerId || !Number.isFinite(points)) {
+      continue;
+    }
+
+    const player = players.get(playerId) ?? {
+      id: playerId,
+      matches: 0,
+      name: performance.Name,
+      points: 0,
+      team: performance.Team,
+    };
+
+    player.matches += 1;
+    player.points += points;
+    player.name ||= performance.Name;
+    player.team ||= performance.Team;
+    players.set(playerId, player);
+  }
+
+  return [...players.values()].sort((firstPlayer, secondPlayer) => {
+    if (secondPlayer.points !== firstPlayer.points) {
+      return secondPlayer.points - firstPlayer.points;
+    }
+
+    return firstPlayer.name.localeCompare(secondPlayer.name);
+  });
+}
+
+function renderPlayerChampionshipError(error) {
+  if (!playerChampionshipRows) {
+    return;
+  }
+
+  playerChampionshipRows.innerHTML = `
+    <tr>
+      <td colspan="5">Unable to load player performance data: ${escapeHtml(error.message)}</td>
+    </tr>
+  `;
+}
+
+function parsePoints(value) {
+  if (value === undefined || value === null || value === "") {
+    return 0;
+  }
+
+  return Number(String(value).replace(/,/g, ""));
+}
+
+function formatPoints(value) {
+  return Number.isInteger(value) ? String(value) : value.toFixed(1);
 }
 
 function renderTestingPlayers(players) {
