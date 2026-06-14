@@ -11,7 +11,7 @@ const matchdayMatchList = document.querySelector("#matchday-match-list");
 const playerChampionshipRows = document.querySelector("#player-championship-rows");
 const testingPlayerRows = document.querySelector("#testing-player-rows");
 
-function showPage(pageName) {
+function showPage(pageName, options = {}) {
   const pageAliases = {
     "manager-scores": "standings",
     "player-scores": "standings",
@@ -27,9 +27,13 @@ function showPage(pageName) {
   pageLinks.forEach((link) => {
     link.classList.toggle("is-active", link.dataset.pageLink === activePageName);
   });
+
+  if (options.scrollToTop) {
+    scrollToPageTop();
+  }
 }
 
-function showTab(tabName) {
+function showTab(tabName, options = {}) {
   tabs.forEach((tab) => {
     const isActive = tab.dataset.tab === tabName;
     tab.classList.toggle("is-active", isActive);
@@ -39,22 +43,32 @@ function showTab(tabName) {
   tabPanels.forEach((panel) => {
     panel.classList.toggle("is-active", panel.dataset.tabPanel === tabName);
   });
+
+  if (options.scrollToTop) {
+    scrollToPageTop();
+  }
+}
+
+function scrollToPageTop() {
+  requestAnimationFrame(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  });
 }
 
 pageLinks.forEach((link) => {
   link.addEventListener("click", () => {
-    showPage(link.dataset.pageLink);
+    showPage(link.dataset.pageLink, { scrollToTop: true });
   });
 });
 
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
-    showTab(tab.dataset.tab);
+    showTab(tab.dataset.tab, { scrollToTop: true });
   });
 });
 
 window.addEventListener("hashchange", () => {
-  showPage(window.location.hash.replace("#", "") || "results");
+  showPage(window.location.hash.replace("#", "") || "results", { scrollToTop: true });
 });
 
 showPage(window.location.hash.replace("#", "") || "results");
