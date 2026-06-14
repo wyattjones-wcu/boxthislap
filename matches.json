@@ -1,61 +1,834 @@
 [
-    {
-        "Id": 8,
-        "Date": "2026-06-13",
-        "Time": "3 PM",
-        "Home": "Qatar",
-        "Away": "Switzerland",
-        "Data": {
-            "Switzerland": "Jonathan"
-        }
-    },
-    {
-        "Id": 7,
-        "Date": "2026-06-13",
-        "Time": "6 PM",
-        "Home": "Brazil",
-        "Away": "Morocco",
-        "Data": {
-            "Brazil": "Jordan",
-            "Gabriel Magalhães": "Sean",
-            "Neymar": "Jonathan",
-            "Vini Jr": "Michael"
-        }
-    },
-    {
-        "Id": 5,
-        "Date": "2026-06-13",
-        "Time": "9 PM",
-        "Home": "Haiti",
-        "Away": "Scotland",
-        "Data": {
-            "Scotland": "Luisa",
-            "Ben Gannon-Doak": "Jonathan"
-        }
-    },
-    {
-        "Id": 7,
-        "Date": "2026-06-13",
-        "Time": "12 AM",
-        "Home": "Australia",
-        "Away": "Türkiye",
-        "Data": {
-            "Australia": "Jonathan",
-            "Türkiye": "Luisa",
-            "Jacob Italiano": "Michael",
-            "Can Uzun": "Jordan"
-        }
-    },
-    {
-        "Id": 9,
-        "Date": "2026-06-14",
-        "Time": "7 PM",
-        "Home": "Cote d'Ivoire",
-        "Away": "Ecuador",
-        "Data": {
-            "Ecuador": "Wyatt",
-            "Cote d'Ivoire": "Jonathan",
-            "Piero Hincapie": "Wyatt"
-        }
-    }
+  {
+    "Id": 1,
+    "Date": "2026-06-11",
+    "Time": "",
+    "Home": "Mexico",
+    "Away": "South Africa",
+    "Data": {}
+  },
+  {
+    "Id": 2,
+    "Date": "2026-06-11",
+    "Time": "",
+    "Home": "South Korea",
+    "Away": "Czechia",
+    "Data": {}
+  },
+  {
+    "Id": 3,
+    "Date": "2026-06-12",
+    "Time": "",
+    "Home": "Canada",
+    "Away": "Bosnia and Herzegovina",
+    "Data": {}
+  },
+  {
+    "Id": 4,
+    "Date": "2026-06-12",
+    "Time": "",
+    "Home": "USA",
+    "Away": "Paraguay",
+    "Data": {}
+  },
+  {
+    "Id": 5,
+    "Date": "2026-06-13",
+    "Time": "",
+    "Home": "Haiti",
+    "Away": "Scotland",
+    "Data": {}
+  },
+  {
+    "Id": 6,
+    "Date": "2026-06-13",
+    "Time": "",
+    "Home": "Australia",
+    "Away": "Turkiye",
+    "Data": {}
+  },
+  {
+    "Id": 7,
+    "Date": "2026-06-13",
+    "Time": "",
+    "Home": "Brazil",
+    "Away": "Morocco",
+    "Data": {}
+  },
+  {
+    "Id": 8,
+    "Date": "2026-06-13",
+    "Time": "",
+    "Home": "Qatar",
+    "Away": "Switzerland",
+    "Data": {}
+  },
+  {
+    "Id": 9,
+    "Date": "2026-06-14",
+    "Time": "",
+    "Home": "Ivory Coast",
+    "Away": "Ecuador",
+    "Data": {}
+  },
+  {
+    "Id": 10,
+    "Date": "2026-06-14",
+    "Time": "",
+    "Home": "Germany",
+    "Away": "Curacao",
+    "Data": {}
+  },
+  {
+    "Id": 11,
+    "Date": "2026-06-14",
+    "Time": "",
+    "Home": "Netherlands",
+    "Away": "Japan",
+    "Data": {}
+  },
+  {
+    "Id": 12,
+    "Date": "2026-06-14",
+    "Time": "",
+    "Home": "Sweden",
+    "Away": "Tunisia",
+    "Data": {}
+  },
+  {
+    "Id": 13,
+    "Date": "2026-06-15",
+    "Time": "",
+    "Home": "Saudi Arabia",
+    "Away": "Uruguay",
+    "Data": {}
+  },
+  {
+    "Id": 14,
+    "Date": "2026-06-15",
+    "Time": "",
+    "Home": "Spain",
+    "Away": "Cape Verde",
+    "Data": {}
+  },
+  {
+    "Id": 15,
+    "Date": "2026-06-15",
+    "Time": "",
+    "Home": "Iran",
+    "Away": "New Zealand",
+    "Data": {}
+  },
+  {
+    "Id": 16,
+    "Date": "2026-06-15",
+    "Time": "",
+    "Home": "Belgium",
+    "Away": "Egypt",
+    "Data": {}
+  },
+  {
+    "Id": 17,
+    "Date": "2026-06-16",
+    "Time": "",
+    "Home": "France",
+    "Away": "Senegal",
+    "Data": {}
+  },
+  {
+    "Id": 18,
+    "Date": "2026-06-16",
+    "Time": "",
+    "Home": "Iraq",
+    "Away": "Norway",
+    "Data": {}
+  },
+  {
+    "Id": 19,
+    "Date": "2026-06-16",
+    "Time": "",
+    "Home": "Argentina",
+    "Away": "Algeria",
+    "Data": {}
+  },
+  {
+    "Id": 20,
+    "Date": "2026-06-16",
+    "Time": "",
+    "Home": "Austria",
+    "Away": "Jordan",
+    "Data": {}
+  },
+  {
+    "Id": 21,
+    "Date": "2026-06-17",
+    "Time": "",
+    "Home": "Ghana",
+    "Away": "Panama",
+    "Data": {}
+  },
+  {
+    "Id": 22,
+    "Date": "2026-06-17",
+    "Time": "",
+    "Home": "England",
+    "Away": "Croatia",
+    "Data": {}
+  },
+  {
+    "Id": 23,
+    "Date": "2026-06-17",
+    "Time": "",
+    "Home": "Portugal",
+    "Away": "DR Congo",
+    "Data": {}
+  },
+  {
+    "Id": 24,
+    "Date": "2026-06-17",
+    "Time": "",
+    "Home": "Uzbekistan",
+    "Away": "Colombia",
+    "Data": {}
+  },
+  {
+    "Id": 25,
+    "Date": "2026-06-18",
+    "Time": "",
+    "Home": "Czechia",
+    "Away": "South Africa",
+    "Data": {}
+  },
+  {
+    "Id": 26,
+    "Date": "2026-06-18",
+    "Time": "",
+    "Home": "Switzerland",
+    "Away": "Bosnia and Herzegovina",
+    "Data": {}
+  },
+  {
+    "Id": 27,
+    "Date": "2026-06-18",
+    "Time": "",
+    "Home": "Canada",
+    "Away": "Qatar",
+    "Data": {}
+  },
+  {
+    "Id": 28,
+    "Date": "2026-06-18",
+    "Time": "",
+    "Home": "Mexico",
+    "Away": "South Korea",
+    "Data": {}
+  },
+  {
+    "Id": 29,
+    "Date": "2026-06-19",
+    "Time": "",
+    "Home": "Brazil",
+    "Away": "Haiti",
+    "Data": {}
+  },
+  {
+    "Id": 30,
+    "Date": "2026-06-19",
+    "Time": "",
+    "Home": "Scotland",
+    "Away": "Morocco",
+    "Data": {}
+  },
+  {
+    "Id": 31,
+    "Date": "2026-06-19",
+    "Time": "",
+    "Home": "Turkiye",
+    "Away": "Paraguay",
+    "Data": {}
+  },
+  {
+    "Id": 32,
+    "Date": "2026-06-19",
+    "Time": "",
+    "Home": "USA",
+    "Away": "Australia",
+    "Data": {}
+  },
+  {
+    "Id": 33,
+    "Date": "2026-06-20",
+    "Time": "",
+    "Home": "Germany",
+    "Away": "Ivory Coast",
+    "Data": {}
+  },
+  {
+    "Id": 34,
+    "Date": "2026-06-20",
+    "Time": "",
+    "Home": "Ecuador",
+    "Away": "Curacao",
+    "Data": {}
+  },
+  {
+    "Id": 35,
+    "Date": "2026-06-20",
+    "Time": "",
+    "Home": "Netherlands",
+    "Away": "Sweden",
+    "Data": {}
+  },
+  {
+    "Id": 36,
+    "Date": "2026-06-20",
+    "Time": "",
+    "Home": "Tunisia",
+    "Away": "Japan",
+    "Data": {}
+  },
+  {
+    "Id": 37,
+    "Date": "2026-06-21",
+    "Time": "",
+    "Home": "Uruguay",
+    "Away": "Cape Verde",
+    "Data": {}
+  },
+  {
+    "Id": 38,
+    "Date": "2026-06-21",
+    "Time": "",
+    "Home": "Spain",
+    "Away": "Saudi Arabia",
+    "Data": {}
+  },
+  {
+    "Id": 39,
+    "Date": "2026-06-21",
+    "Time": "",
+    "Home": "Belgium",
+    "Away": "Iran",
+    "Data": {}
+  },
+  {
+    "Id": 40,
+    "Date": "2026-06-21",
+    "Time": "",
+    "Home": "New Zealand",
+    "Away": "Egypt",
+    "Data": {}
+  },
+  {
+    "Id": 41,
+    "Date": "2026-06-22",
+    "Time": "",
+    "Home": "Norway",
+    "Away": "Senegal",
+    "Data": {}
+  },
+  {
+    "Id": 42,
+    "Date": "2026-06-22",
+    "Time": "",
+    "Home": "France",
+    "Away": "Iraq",
+    "Data": {}
+  },
+  {
+    "Id": 43,
+    "Date": "2026-06-22",
+    "Time": "",
+    "Home": "Argentina",
+    "Away": "Austria",
+    "Data": {}
+  },
+  {
+    "Id": 44,
+    "Date": "2026-06-22",
+    "Time": "",
+    "Home": "Jordan",
+    "Away": "Algeria",
+    "Data": {}
+  },
+  {
+    "Id": 45,
+    "Date": "2026-06-23",
+    "Time": "",
+    "Home": "England",
+    "Away": "Ghana",
+    "Data": {}
+  },
+  {
+    "Id": 46,
+    "Date": "2026-06-23",
+    "Time": "",
+    "Home": "Panama",
+    "Away": "Croatia",
+    "Data": {}
+  },
+  {
+    "Id": 47,
+    "Date": "2026-06-23",
+    "Time": "",
+    "Home": "Portugal",
+    "Away": "Uzbekistan",
+    "Data": {}
+  },
+  {
+    "Id": 48,
+    "Date": "2026-06-23",
+    "Time": "",
+    "Home": "Colombia",
+    "Away": "DR Congo",
+    "Data": {}
+  },
+  {
+    "Id": 49,
+    "Date": "2026-06-24",
+    "Time": "",
+    "Home": "Scotland",
+    "Away": "Brazil",
+    "Data": {}
+  },
+  {
+    "Id": 50,
+    "Date": "2026-06-24",
+    "Time": "",
+    "Home": "Morocco",
+    "Away": "Haiti",
+    "Data": {}
+  },
+  {
+    "Id": 51,
+    "Date": "2026-06-24",
+    "Time": "",
+    "Home": "Switzerland",
+    "Away": "Canada",
+    "Data": {}
+  },
+  {
+    "Id": 52,
+    "Date": "2026-06-24",
+    "Time": "",
+    "Home": "Bosnia and Herzegovina",
+    "Away": "Qatar",
+    "Data": {}
+  },
+  {
+    "Id": 53,
+    "Date": "2026-06-24",
+    "Time": "",
+    "Home": "Czechia",
+    "Away": "Mexico",
+    "Data": {}
+  },
+  {
+    "Id": 54,
+    "Date": "2026-06-24",
+    "Time": "",
+    "Home": "South Africa",
+    "Away": "South Korea",
+    "Data": {}
+  },
+  {
+    "Id": 55,
+    "Date": "2026-06-25",
+    "Time": "",
+    "Home": "Curacao",
+    "Away": "Ivory Coast",
+    "Data": {}
+  },
+  {
+    "Id": 56,
+    "Date": "2026-06-25",
+    "Time": "",
+    "Home": "Ecuador",
+    "Away": "Germany",
+    "Data": {}
+  },
+  {
+    "Id": 57,
+    "Date": "2026-06-25",
+    "Time": "",
+    "Home": "Japan",
+    "Away": "Sweden",
+    "Data": {}
+  },
+  {
+    "Id": 58,
+    "Date": "2026-06-25",
+    "Time": "",
+    "Home": "Tunisia",
+    "Away": "Netherlands",
+    "Data": {}
+  },
+  {
+    "Id": 59,
+    "Date": "2026-06-25",
+    "Time": "",
+    "Home": "Turkiye",
+    "Away": "USA",
+    "Data": {}
+  },
+  {
+    "Id": 60,
+    "Date": "2026-06-25",
+    "Time": "",
+    "Home": "Paraguay",
+    "Away": "Australia",
+    "Data": {}
+  },
+  {
+    "Id": 61,
+    "Date": "2026-06-26",
+    "Time": "",
+    "Home": "Norway",
+    "Away": "France",
+    "Data": {}
+  },
+  {
+    "Id": 62,
+    "Date": "2026-06-26",
+    "Time": "",
+    "Home": "Senegal",
+    "Away": "Iraq",
+    "Data": {}
+  },
+  {
+    "Id": 63,
+    "Date": "2026-06-26",
+    "Time": "",
+    "Home": "Egypt",
+    "Away": "Iran",
+    "Data": {}
+  },
+  {
+    "Id": 64,
+    "Date": "2026-06-26",
+    "Time": "",
+    "Home": "New Zealand",
+    "Away": "Belgium",
+    "Data": {}
+  },
+  {
+    "Id": 65,
+    "Date": "2026-06-26",
+    "Time": "",
+    "Home": "Cape Verde",
+    "Away": "Saudi Arabia",
+    "Data": {}
+  },
+  {
+    "Id": 66,
+    "Date": "2026-06-26",
+    "Time": "",
+    "Home": "Uruguay",
+    "Away": "Spain",
+    "Data": {}
+  },
+  {
+    "Id": 67,
+    "Date": "2026-06-27",
+    "Time": "",
+    "Home": "Panama",
+    "Away": "England",
+    "Data": {}
+  },
+  {
+    "Id": 68,
+    "Date": "2026-06-27",
+    "Time": "",
+    "Home": "Croatia",
+    "Away": "Ghana",
+    "Data": {}
+  },
+  {
+    "Id": 69,
+    "Date": "2026-06-27",
+    "Time": "",
+    "Home": "Algeria",
+    "Away": "Austria",
+    "Data": {}
+  },
+  {
+    "Id": 70,
+    "Date": "2026-06-27",
+    "Time": "",
+    "Home": "Jordan",
+    "Away": "Argentina",
+    "Data": {}
+  },
+  {
+    "Id": 71,
+    "Date": "2026-06-27",
+    "Time": "",
+    "Home": "Colombia",
+    "Away": "Portugal",
+    "Data": {}
+  },
+  {
+    "Id": 72,
+    "Date": "2026-06-27",
+    "Time": "",
+    "Home": "DR Congo",
+    "Away": "Uzbekistan",
+    "Data": {}
+  },
+  {
+    "Id": 73,
+    "Date": "2026-06-28",
+    "Time": "",
+    "Home": "Group A 2",
+    "Away": "Group B 2",
+    "Data": {}
+  },
+  {
+    "Id": 74,
+    "Date": "2026-06-29",
+    "Time": "",
+    "Home": "Group E 1",
+    "Away": "3rd",
+    "Data": {}
+  },
+  {
+    "Id": 75,
+    "Date": "2026-06-29",
+    "Time": "",
+    "Home": "Group F 1",
+    "Away": "Group C 2",
+    "Data": {}
+  },
+  {
+    "Id": 76,
+    "Date": "2026-06-29",
+    "Time": "",
+    "Home": "Group C 1",
+    "Away": "Group F 2",
+    "Data": {}
+  },
+  {
+    "Id": 77,
+    "Date": "2026-06-30",
+    "Time": "",
+    "Home": "Group I 1",
+    "Away": "3rd",
+    "Data": {}
+  },
+  {
+    "Id": 78,
+    "Date": "2026-06-30",
+    "Time": "",
+    "Home": "Group E 2",
+    "Away": "Group I 2",
+    "Data": {}
+  },
+  {
+    "Id": 79,
+    "Date": "2026-06-30",
+    "Time": "",
+    "Home": "Group A 1",
+    "Away": "3rd",
+    "Data": {}
+  },
+  {
+    "Id": 80,
+    "Date": "2026-07-01",
+    "Time": "",
+    "Home": "Group L 1",
+    "Away": "3rd",
+    "Data": {}
+  },
+  {
+    "Id": 81,
+    "Date": "2026-07-01",
+    "Time": "",
+    "Home": "Group D 1",
+    "Away": "3rd",
+    "Data": {}
+  },
+  {
+    "Id": 82,
+    "Date": "2026-07-01",
+    "Time": "",
+    "Home": "Group G 1",
+    "Away": "3rd",
+    "Data": {}
+  },
+  {
+    "Id": 83,
+    "Date": "2026-07-02",
+    "Time": "",
+    "Home": "Group K 2",
+    "Away": "Group L 2",
+    "Data": {}
+  },
+  {
+    "Id": 84,
+    "Date": "2026-07-02",
+    "Time": "",
+    "Home": "Group H 1",
+    "Away": "Group J 2",
+    "Data": {}
+  },
+  {
+    "Id": 85,
+    "Date": "2026-07-02",
+    "Time": "",
+    "Home": "Group B 1",
+    "Away": "3rd",
+    "Data": {}
+  },
+  {
+    "Id": 86,
+    "Date": "2026-07-03",
+    "Time": "",
+    "Home": "Group J 1",
+    "Away": "Group H 2",
+    "Data": {}
+  },
+  {
+    "Id": 87,
+    "Date": "2026-07-03",
+    "Time": "",
+    "Home": "Group K 1",
+    "Away": "3rd",
+    "Data": {}
+  },
+  {
+    "Id": 88,
+    "Date": "2026-07-03",
+    "Time": "",
+    "Home": "Group D 2",
+    "Away": "Group G 2",
+    "Data": {}
+  },
+  {
+    "Id": 89,
+    "Date": "2026-07-04",
+    "Time": "",
+    "Home": "Winner M74",
+    "Away": "Winner M75",
+    "Data": {}
+  },
+  {
+    "Id": 90,
+    "Date": "2026-07-04",
+    "Time": "",
+    "Home": "Winner M73",
+    "Away": "Winner M75",
+    "Data": {}
+  },
+  {
+    "Id": 91,
+    "Date": "2026-07-05",
+    "Time": "",
+    "Home": "Winner M76",
+    "Away": "Winner M78",
+    "Data": {}
+  },
+  {
+    "Id": 92,
+    "Date": "2026-07-05",
+    "Time": "",
+    "Home": "Winner M79",
+    "Away": "Winner M80",
+    "Data": {}
+  },
+  {
+    "Id": 93,
+    "Date": "2026-07-06",
+    "Time": "",
+    "Home": "Winner M83",
+    "Away": "Winner M84",
+    "Data": {}
+  },
+  {
+    "Id": 94,
+    "Date": "2026-07-06",
+    "Time": "",
+    "Home": "Winner M81",
+    "Away": "Winner M82",
+    "Data": {}
+  },
+  {
+    "Id": 95,
+    "Date": "2026-07-07",
+    "Time": "",
+    "Home": "Winner M86",
+    "Away": "Winner M88",
+    "Data": {}
+  },
+  {
+    "Id": 96,
+    "Date": "2026-07-08",
+    "Time": "",
+    "Home": "Winner M85",
+    "Away": "Winner M87",
+    "Data": {}
+  },
+  {
+    "Id": 97,
+    "Date": "2026-07-09",
+    "Time": "",
+    "Home": "Winner M89",
+    "Away": "Winner M90",
+    "Data": {}
+  },
+  {
+    "Id": 98,
+    "Date": "2026-07-10",
+    "Time": "",
+    "Home": "Winner M93",
+    "Away": "Winner M94",
+    "Data": {}
+  },
+  {
+    "Id": 99,
+    "Date": "2026-07-11",
+    "Time": "",
+    "Home": "Winner M91",
+    "Away": "Winner M92",
+    "Data": {}
+  },
+  {
+    "Id": 100,
+    "Date": "2026-07-11",
+    "Time": "",
+    "Home": "Winner M95",
+    "Away": "Winner M96",
+    "Data": {}
+  },
+  {
+    "Id": 101,
+    "Date": "2026-07-14",
+    "Time": "",
+    "Home": "Winner M97",
+    "Away": "Winner M98",
+    "Data": {}
+  },
+  {
+    "Id": 102,
+    "Date": "2026-07-15",
+    "Time": "",
+    "Home": "Winner M99",
+    "Away": "Winner M100",
+    "Data": {}
+  },
+  {
+    "Id": 103,
+    "Date": "2026-07-18",
+    "Time": "",
+    "Home": "M101 2",
+    "Away": "M102 2",
+    "Data": {}
+  },
+  {
+    "Id": 104,
+    "Date": "2026-07-19",
+    "Time": "",
+    "Home": "Winner M101",
+    "Away": "Winner M102",
+    "Data": {}
+  }
 ]
