@@ -72,14 +72,21 @@ a {
   display: flex;
 }
 
+.header-page-art picture,
 .header-page-art img {
   border-radius: 4px;
   display: block;
-  height: 82px;
+  width: 100%;
+}
+
+.header-page-art picture {
   max-width: min(620px, 100%);
+}
+
+.header-page-art img {
+  height: 82px;
   object-fit: cover;
   object-position: center;
-  width: 100%;
 }
 
 .nav-links {
@@ -763,6 +770,20 @@ tr:last-child td {
   .header-page-art img {
     height: 58px;
     max-width: 100%;
+  }
+
+  @media (orientation: landscape) and (max-height: 520px) {
+    .topbar {
+      grid-template-columns: 104px minmax(0, 1fr) auto;
+    }
+
+    .header-page-art picture {
+      max-width: min(620px, 100%);
+    }
+
+    .header-page-art img {
+      height: 46px;
+    }
   }
 
   .nav-links a {
