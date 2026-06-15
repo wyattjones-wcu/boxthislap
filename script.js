@@ -4,9 +4,9 @@ const pageLinks = document.querySelectorAll("[data-page-link]");
 const pages = document.querySelectorAll("[data-page]");
 const tabs = document.querySelectorAll("[data-tab]");
 const tabPanels = document.querySelectorAll("[data-tab-panel]");
-const leagueShells = document.querySelectorAll("[data-league]");
-const leagueSwitcher = document.querySelector("#league-switcher");
-const leagueSelect = document.querySelector("#league-select");
+const hiddenLeaguesLinks = document.querySelectorAll("[data-hidden-leagues-link]");
+const leagueYearSelect = document.querySelector("#league-year-select");
+const leagueList = document.querySelector("#league-list");
 const resultCards = document.querySelectorAll("[data-result-card]");
 const todayMatchList = document.querySelector("#today-match-list");
 const tomorrowMatchList = document.querySelector("#tomorrow-match-list");
@@ -26,8 +26,16 @@ const MANAGER_COLORS = {
   wyatt: "#96df7d",
 };
 
+const FANTASY_LEAGUES_BY_YEAR = {
+  2024: ["Formula 1"],
+  2025: ["Fantasy Critic", "Fantasy Office", "Formula 1"],
+  2026: ["Fantasy Critic", "Fantasy Office", "Formula 1", "World Cup"],
+};
+
 function showPage(pageName, options = {}) {
-  showLeague("world-cup");
+  if (pageName === "leagues" && !isLeagueDirectoryEnabled()) {
+    pageName = "results";
+  }
 
   const pageAliases = {
     "manager-scores": "standings",
@@ -44,24 +52,6 @@ function showPage(pageName, options = {}) {
   pageLinks.forEach((link) => {
     link.classList.toggle("is-active", link.dataset.pageLink === activePageName);
   });
-
-  if (options.scrollToTop) {
-    scrollToPageTop();
-  }
-}
-
-function showLeague(leagueName, options = {}) {
-  const activeLeague = [...leagueShells].some((league) => league.dataset.league === leagueName)
-    ? leagueName
-    : "world-cup";
-
-  leagueShells.forEach((league) => {
-    league.classList.toggle("is-active", league.dataset.league === activeLeague);
-  });
-
-  if (leagueSelect) {
-    leagueSelect.value = activeLeague;
-  }
 
   if (options.scrollToTop) {
     scrollToPageTop();
@@ -91,6 +81,37 @@ function scrollToPageTop() {
   });
 }
 
+function renderLeagueList(year) {
+  if (!leagueList) {
+    return;
+  }
+
+  const leagues = FANTASY_LEAGUES_BY_YEAR[year] || [];
+
+  if (leagues.length === 0) {
+    leagueList.innerHTML = `<p class="league-empty">No leagues found for ${escapeHtml(year)}.</p>`;
+    return;
+  }
+
+  leagueList.innerHTML = leagues.map((league) => {
+    const isWorldCup = year === "2026" && league === "World Cup";
+
+    return `
+      <article class="league-card${isWorldCup ? " is-current" : ""}">
+        <div>
+          <h2>${escapeHtml(league)}</h2>
+          <p>${escapeHtml(year)}</p>
+        </div>
+        ${isWorldCup ? `<a class="league-card-link" href="#results" data-page-link="results">Open</a>` : `<button class="league-card-link" type="button" disabled>Planned</button>`}
+      </article>
+    `;
+  }).join("");
+}
+
+function isLeagueDirectoryEnabled() {
+  return sessionStorage.getItem("boxThisLapLeagueSwitcher") === "enabled";
+}
+
 pageLinks.forEach((link) => {
   link.addEventListener("click", (event) => {
     event.preventDefault();
@@ -118,12 +139,14 @@ if (new URLSearchParams(window.location.search).get("switcher") === "1") {
   sessionStorage.setItem("boxThisLapLeagueSwitcher", "enabled");
 }
 
-if (sessionStorage.getItem("boxThisLapLeagueSwitcher") === "enabled") {
-  leagueSwitcher.hidden = false;
+if (isLeagueDirectoryEnabled()) {
+  hiddenLeaguesLinks.forEach((link) => {
+    link.hidden = false;
+  });
 }
 
-leagueSelect?.addEventListener("change", () => {
-  showLeague(leagueSelect.value, { scrollToTop: true });
+leagueYearSelect?.addEventListener("change", () => {
+  renderLeagueList(leagueYearSelect.value);
 });
 
 resultCards.forEach((card) => {
@@ -173,8 +196,8 @@ window.addEventListener("popstate", () => {
   showPage(window.location.hash.replace("#", "") || "results", { scrollToTop: true });
 });
 
-showLeague(leagueSelect?.value || "world-cup");
 showPage(window.location.hash.replace("#", "") || "results");
+renderLeagueList(leagueYearSelect?.value || "2026");
 
 const siteData = {};
 window.boxThisLapData = siteData;

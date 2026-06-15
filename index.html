@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Box This Lap | Results</title>
-    <link rel="stylesheet" href="styles.css?v=202606142157">
+    <link rel="stylesheet" href="styles.css?v=202606150001">
   </head>
   <body>
     <header class="site-header">
@@ -17,20 +17,12 @@
           <a href="#tomorrow" data-page-link="tomorrow" role="tab">Tomorrow</a>
           <a href="#results" data-page-link="results" role="tab">Results</a>
           <a href="#standings" data-page-link="standings" role="tab">Standings</a>
+          <a href="#leagues" data-page-link="leagues" data-hidden-leagues-link role="tab" hidden>Leagues</a>
         </div>
-        <label class="league-switcher" id="league-switcher" hidden>
-          <span>League</span>
-          <select id="league-select">
-            <option value="world-cup">World Cup Fantasy</option>
-            <option value="league-lab">League Lab</option>
-            <option value="archive">Archive</option>
-          </select>
-        </label>
       </nav>
     </header>
 
     <main>
-      <div class="league-shell is-active" data-league="world-cup">
       <section class="page" id="today" data-page="today">
         <div class="section-heading">
           <h1>Today</h1>
@@ -395,33 +387,24 @@
           </table>
         </div>
       </section>
-      </div>
 
-      <div class="league-shell" data-league="league-lab">
-        <section class="page league-page is-active">
-          <div class="section-heading">
-            <h1>League Lab</h1>
-          </div>
-          <div class="league-placeholder">
-            <h2>New fantasy league</h2>
-            <p>This hidden workspace is ready for another league page.</p>
-          </div>
-        </section>
-      </div>
+      <section class="page" id="leagues" data-page="leagues">
+        <div class="section-heading page-heading-with-action">
+          <h1>Leagues</h1>
+          <label class="select-control">
+            <span>Year</span>
+            <select id="league-year-select">
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+            </select>
+          </label>
+        </div>
 
-      <div class="league-shell" data-league="archive">
-        <section class="page league-page is-active">
-          <div class="section-heading">
-            <h1>Archive</h1>
-          </div>
-          <div class="league-placeholder">
-            <h2>Past leagues</h2>
-            <p>This hidden page can hold older league results or experiments.</p>
-          </div>
-        </section>
-      </div>
+        <div class="league-list" id="league-list"></div>
+      </section>
     </main>
 
-    <script type="module" src="script.js?v=202606142118"></script>
+    <script type="module" src="script.js?v=202606150001"></script>
   </body>
 </html>
