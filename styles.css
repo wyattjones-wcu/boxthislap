@@ -298,8 +298,7 @@ main {
   color: var(--muted);
 }
 
-.league-detail {
-  margin-top: 28px;
+.league-detail-page {
   max-width: 900px;
 }
 
@@ -327,6 +326,11 @@ main {
   color: var(--accent-dark);
   font-weight: 800;
   text-decoration: none;
+}
+
+.league-detail-actions {
+  display: flex;
+  gap: 14px;
 }
 
 .fantasy-critic-standings {

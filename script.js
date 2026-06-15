@@ -7,7 +7,7 @@ const tabPanels = document.querySelectorAll("[data-tab-panel]");
 const hiddenLeaguesLinks = document.querySelectorAll("[data-hidden-leagues-link]");
 const leagueYearSelect = document.querySelector("#league-year-select");
 const leagueList = document.querySelector("#league-list");
-const leagueDetail = document.querySelector("#league-detail");
+const fantasyCritic2025Content = document.querySelector("#fantasy-critic-2025-content");
 const resultCards = document.querySelectorAll("[data-result-card]");
 const todayMatchList = document.querySelector("#today-match-list");
 const tomorrowMatchList = document.querySelector("#tomorrow-match-list");
@@ -134,7 +134,9 @@ const FANTASY_CRITIC_2025 = {
 };
 
 function showPage(pageName, options = {}) {
-  if (pageName === "leagues" && !isLeagueDirectoryEnabled()) {
+  const hiddenLeaguePages = ["leagues", "fantasy-critic-2025"];
+
+  if (hiddenLeaguePages.includes(pageName) && !isLeagueDirectoryEnabled()) {
     pageName = "results";
   }
 
@@ -188,7 +190,6 @@ function renderLeagueList(year) {
   }
 
   const leagues = FANTASY_LEAGUES_BY_YEAR[year] || [];
-  hideLeagueDetail();
 
   if (leagues.length === 0) {
     leagueList.innerHTML = `<p class="league-empty">No leagues found for ${escapeHtml(year)}.</p>`;
@@ -217,29 +218,18 @@ function renderLeagueCardAction({ isWorldCup, isFantasyCritic, canOpen }) {
   }
 
   if (isFantasyCritic) {
-    return `<button class="league-card-link" type="button" data-league-detail="fantasy-critic-2025">Open</button>`;
+    return `<a class="league-card-link" href="#fantasy-critic-2025" data-page-link="fantasy-critic-2025">Open</a>`;
   }
 
   return `<button class="league-card-link" type="button" ${canOpen ? "" : "disabled"}>Planned</button>`;
 }
 
-function hideLeagueDetail() {
-  if (!leagueDetail) {
+function renderFantasyCriticPage() {
+  if (!fantasyCritic2025Content) {
     return;
   }
 
-  leagueDetail.hidden = true;
-  leagueDetail.innerHTML = "";
-}
-
-function showFantasyCriticLeague() {
-  if (!leagueDetail) {
-    return;
-  }
-
-  leagueDetail.innerHTML = renderFantasyCriticLeague(FANTASY_CRITIC_2025);
-  leagueDetail.hidden = false;
-  leagueDetail.scrollIntoView({ block: "start", behavior: "smooth" });
+  fantasyCritic2025Content.innerHTML = renderFantasyCriticLeague(FANTASY_CRITIC_2025);
 }
 
 function renderFantasyCriticLeague(league) {
@@ -249,7 +239,10 @@ function renderFantasyCriticLeague(league) {
         <h2>${escapeHtml(league.title)}</h2>
         <p>${escapeHtml(league.subtitle)}</p>
       </div>
-      <a class="league-source-link" href="${escapeHtml(league.sourceUrl)}" target="_blank" rel="noopener">Source</a>
+      <div class="league-detail-actions">
+        <a class="league-source-link" href="#leagues" data-page-link="leagues">Leagues</a>
+        <a class="league-source-link" href="${escapeHtml(league.sourceUrl)}" target="_blank" rel="noopener">Source</a>
+      </div>
     </div>
 
     <div class="fantasy-critic-standings">
@@ -341,18 +334,6 @@ leagueYearSelect?.addEventListener("change", () => {
   renderLeagueList(leagueYearSelect.value);
 });
 
-leagueList?.addEventListener("click", (event) => {
-  const detailButton = event.target.closest("[data-league-detail]");
-
-  if (!detailButton) {
-    return;
-  }
-
-  if (detailButton.dataset.leagueDetail === "fantasy-critic-2025") {
-    showFantasyCriticLeague();
-  }
-});
-
 resultCards.forEach((card) => {
   const toggle = card.querySelector("[data-result-toggle]");
 
@@ -402,6 +383,7 @@ window.addEventListener("popstate", () => {
 
 showPage(window.location.hash.replace("#", "") || "results");
 renderLeagueList(leagueYearSelect?.value || "2026");
+renderFantasyCriticPage();
 
 const siteData = {};
 window.boxThisLapData = siteData;
