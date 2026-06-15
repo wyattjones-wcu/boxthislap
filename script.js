@@ -164,6 +164,8 @@ function showPage(pageName, options = {}) {
     art.classList.toggle("is-active", art.dataset.headerArt === activePageName);
   });
 
+  document.body.classList.remove("is-routing");
+
   if (options.scrollToTop) {
     scrollToPageTop();
   }

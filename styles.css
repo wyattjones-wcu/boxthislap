@@ -22,6 +22,11 @@ body {
   line-height: 1.5;
 }
 
+body.is-routing .site-header,
+body.is-routing main {
+  visibility: hidden;
+}
+
 a {
   color: inherit;
 }
