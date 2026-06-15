@@ -7,6 +7,7 @@ const tabPanels = document.querySelectorAll("[data-tab-panel]");
 const hiddenLeaguesLinks = document.querySelectorAll("[data-hidden-leagues-link]");
 const leagueYearSelect = document.querySelector("#league-year-select");
 const leagueList = document.querySelector("#league-list");
+const leagueDetail = document.querySelector("#league-detail");
 const resultCards = document.querySelectorAll("[data-result-card]");
 const todayMatchList = document.querySelector("#today-match-list");
 const tomorrowMatchList = document.querySelector("#tomorrow-match-list");
@@ -30,6 +31,106 @@ const FANTASY_LEAGUES_BY_YEAR = {
   2024: ["Formula 1"],
   2025: ["Fantasy Critic", "Fantasy Office", "Formula 1"],
   2026: ["Fantasy Critic", "Fantasy Office", "Formula 1", "World Cup"],
+};
+
+const FANTASY_CRITIC_2025 = {
+  title: "Fantasy Critic",
+  subtitle: "Best of the Rest",
+  sourceUrl: "https://www.fantasycritic.games/league/f29fddba-fa80-40bf-aa71-d062e6e80635/2025",
+  standings: [
+    {
+      rank: 1,
+      manager: "Wyatt",
+      publisher: "JonesSoft",
+      points: "169.79",
+      released: "12",
+      budget: "$0",
+      roster: [
+        ["Ghost of Yotei", "87", "17"],
+        ["Split Fiction", "91", "21"],
+        ["Sid Meier's Civilization VII", "79", "9"],
+        ["Death Stranding 2: On the Beach", "90", "20"],
+        ["Unannounced Mainline 3D Mario Platformer", "--", "0"],
+        ["Avowed", "80", "10"],
+        ["The Outer Worlds 2", "83", "13"],
+        ["Rift of the NecroDancer", "80", "10"],
+        ["Mario Kart World", "87", "17"],
+        ["Clair Obscur: Expedition 33", "92", "24"],
+        ["South of Midnight", "77", "7"],
+        ["Ninja Gaiden 4", "82", "12"],
+        ["Tails of Iron 2: Whiskers of Winter", "80", "10"],
+        ["CPK Coffee Talk Tokyo", "--", "0"],
+        ["CPK Arknights: Endfield", "--", "0"],
+      ],
+    },
+    {
+      rank: 2,
+      manager: "Sean",
+      publisher: "MicroHard Studios",
+      points: "155.86",
+      released: "12",
+      budget: "$11",
+      roster: [
+        ["Like a Dragon: Pirate Yakuza in Hawaii", "81", "11"],
+        ["Mafia: The Old Country", "74", "4"],
+        ["Assassin's Creed Shadows", "81", "11"],
+        ["Metroid Prime 4: Beyond", "81", "11"],
+        ["Pokemon Legends: Z-A", "79", "9"],
+        ["Wanderstop", "81", "11"],
+        ["Xenoblade Chronicles X: Definitive Edition", "87", "17"],
+        ["Ninja Gaiden: Ragebound", "86", "16"],
+        ["Tony Hawk's Pro Skater 3 + 4", "83", "13"],
+        ["Deltarune", "89", "19"],
+        ["Donkey Kong Bananza", "91", "23"],
+        ["The Elder Scrolls IV: Oblivion: Remastered", "82", "12"],
+        ["Mina the Hollower", "--", "0"],
+        ["CPK Subnautica 2", "--", "0"],
+        ["CPK Garfield Kart 2 - All You Can Drift", "--", "--"],
+      ],
+    },
+    {
+      rank: 3,
+      manager: "Michael",
+      publisher: "Amazon Web Services powered by Gemini powered by OpenAI",
+      points: "94.92",
+      released: "9",
+      budget: "$9",
+      roster: [
+        ["Monster Hunter Wilds", "89", "19"],
+        ["Doom: The Dark Ages", "86", "16"],
+        ["Kingdom Come: Deliverance II", "89", "19"],
+        ["Borderlands 4", "82", "12"],
+        ["Metal Gear Solid Delta: Snake Eater", "85", "15"],
+        ["Little Nightmares III", "71", "1"],
+        ["Subnautica 2", "--", "0"],
+        ["Wreckfest 2", "--", "0"],
+        ["Atomfall", "75", "5"],
+        ["Hollow Knight: Silksong", "91", "22"],
+        ["Garfield Kart 2 - All You Can Drift", "--", "--"],
+        ["CPK Unannounced Mainline 3D Mario Platformer", "--", "0"],
+        ["CPK", "--", "-15"],
+      ],
+    },
+    {
+      rank: 4,
+      manager: "Jonathan",
+      publisher: "Hispan!c Games",
+      points: "-7.53",
+      released: "3",
+      budget: "$100",
+      roster: [
+        ["Elden Ring Nightreign", "80", "10"],
+        ["Mewgenics", "--", "0"],
+        ["Coffee Talk Tokyo", "--", "0"],
+        ["The Bazaar", "--", "--"],
+        ["Slay the Spire 2", "--", "0"],
+        ["Citizen Sleeper 2: Starward Vector", "87", "17"],
+        ["Arknights: Endfield", "--", "0"],
+        ["CPK Death Stranding 2: On the Beach", "90", "-20"],
+        ["CPK", "--", "-15"],
+      ],
+    },
+  ],
 };
 
 function showPage(pageName, options = {}) {
@@ -87,6 +188,7 @@ function renderLeagueList(year) {
   }
 
   const leagues = FANTASY_LEAGUES_BY_YEAR[year] || [];
+  hideLeagueDetail();
 
   if (leagues.length === 0) {
     leagueList.innerHTML = `<p class="league-empty">No leagues found for ${escapeHtml(year)}.</p>`;
@@ -95,16 +197,105 @@ function renderLeagueList(year) {
 
   leagueList.innerHTML = leagues.map((league) => {
     const isWorldCup = year === "2026" && league === "World Cup";
+    const isFantasyCritic = year === "2025" && league === "Fantasy Critic";
+    const canOpen = isWorldCup || isFantasyCritic;
 
     return `
       <article class="league-card${isWorldCup ? " is-current" : ""}">
         <div>
           <h2>${escapeHtml(league)}</h2>
         </div>
-        ${isWorldCup ? `<a class="league-card-link" href="#results" data-page-link="results">Open</a>` : `<button class="league-card-link" type="button" disabled>Planned</button>`}
+        ${renderLeagueCardAction({ isWorldCup, isFantasyCritic, canOpen })}
       </article>
     `;
   }).join("");
+}
+
+function renderLeagueCardAction({ isWorldCup, isFantasyCritic, canOpen }) {
+  if (isWorldCup) {
+    return `<a class="league-card-link" href="#results" data-page-link="results">Open</a>`;
+  }
+
+  if (isFantasyCritic) {
+    return `<button class="league-card-link" type="button" data-league-detail="fantasy-critic-2025">Open</button>`;
+  }
+
+  return `<button class="league-card-link" type="button" ${canOpen ? "" : "disabled"}>Planned</button>`;
+}
+
+function hideLeagueDetail() {
+  if (!leagueDetail) {
+    return;
+  }
+
+  leagueDetail.hidden = true;
+  leagueDetail.innerHTML = "";
+}
+
+function showFantasyCriticLeague() {
+  if (!leagueDetail) {
+    return;
+  }
+
+  leagueDetail.innerHTML = renderFantasyCriticLeague(FANTASY_CRITIC_2025);
+  leagueDetail.hidden = false;
+  leagueDetail.scrollIntoView({ block: "start", behavior: "smooth" });
+}
+
+function renderFantasyCriticLeague(league) {
+  return `
+    <div class="league-detail-heading">
+      <div>
+        <h2>${escapeHtml(league.title)}</h2>
+        <p>${escapeHtml(league.subtitle)}</p>
+      </div>
+      <a class="league-source-link" href="${escapeHtml(league.sourceUrl)}" target="_blank" rel="noopener">Source</a>
+    </div>
+
+    <div class="fantasy-critic-standings">
+      ${league.standings.map((entry) => renderFantasyCriticStanding(entry)).join("")}
+    </div>
+  `;
+}
+
+function renderFantasyCriticStanding(entry) {
+  return `
+    <article class="fantasy-critic-card">
+      <header class="fantasy-critic-summary">
+        <div class="fantasy-critic-rank">
+          <span>Rank</span>
+          <strong>${escapeHtml(entry.rank)}</strong>
+        </div>
+        <div class="fantasy-critic-manager">
+          ${renderManagerChip(entry.manager)}
+          <small>${escapeHtml(entry.publisher)}</small>
+        </div>
+        <div class="fantasy-critic-points">
+          <span>Points</span>
+          <strong>${escapeHtml(entry.points)}</strong>
+        </div>
+      </header>
+
+      <div class="fantasy-critic-meta">
+        <span>Released <strong>${escapeHtml(entry.released)}</strong></span>
+        <span>Budget <strong>${escapeHtml(entry.budget)}</strong></span>
+      </div>
+
+      <div class="fantasy-critic-roster">
+        ${entry.roster.map((game) => renderFantasyCriticGame(game)).join("")}
+      </div>
+    </article>
+  `;
+}
+
+function renderFantasyCriticGame([game, critic, points]) {
+  return `
+    <div class="fantasy-critic-game">
+      <strong>${escapeHtml(game)}</strong>
+      <span>Critic ${escapeHtml(critic)}</span>
+      <span>Pts ${escapeHtml(points)}</span>
+    </div>
+  `;
 }
 
 function isLeagueDirectoryEnabled() {
@@ -146,6 +337,18 @@ if (isLeagueDirectoryEnabled()) {
 
 leagueYearSelect?.addEventListener("change", () => {
   renderLeagueList(leagueYearSelect.value);
+});
+
+leagueList?.addEventListener("click", (event) => {
+  const detailButton = event.target.closest("[data-league-detail]");
+
+  if (!detailButton) {
+    return;
+  }
+
+  if (detailButton.dataset.leagueDetail === "fantasy-critic-2025") {
+    showFantasyCriticLeague();
+  }
 });
 
 resultCards.forEach((card) => {

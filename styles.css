@@ -298,6 +298,138 @@ main {
   color: var(--muted);
 }
 
+.league-detail {
+  margin-top: 28px;
+  max-width: 900px;
+}
+
+.league-detail-heading {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+}
+
+.league-detail-heading h2 {
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.league-detail-heading p {
+  color: var(--muted);
+  margin: 4px 0 0;
+}
+
+.league-source-link {
+  color: var(--accent-dark);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.fantasy-critic-standings {
+  display: grid;
+  gap: 18px;
+}
+
+.fantasy-critic-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 8px 18px rgba(24, 33, 47, 0.08);
+  overflow: hidden;
+}
+
+.fantasy-critic-summary {
+  align-items: center;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 82px minmax(0, 1fr) 100px;
+  padding: 16px;
+}
+
+.fantasy-critic-rank,
+.fantasy-critic-points {
+  display: grid;
+  gap: 4px;
+}
+
+.fantasy-critic-rank span,
+.fantasy-critic-points span {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.fantasy-critic-rank strong,
+.fantasy-critic-points strong {
+  font-size: 1.35rem;
+}
+
+.fantasy-critic-manager {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.fantasy-critic-manager .manager-chip {
+  justify-content: flex-start;
+}
+
+.fantasy-critic-manager small {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.fantasy-critic-meta {
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 18px;
+  padding: 11px 16px;
+}
+
+.fantasy-critic-meta span {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.fantasy-critic-meta strong {
+  color: var(--ink);
+}
+
+.fantasy-critic-roster {
+  border-top: 1px solid var(--line);
+  display: grid;
+}
+
+.fantasy-critic-game {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) 84px 70px;
+  padding: 11px 16px;
+}
+
+.fantasy-critic-game:last-child {
+  border-bottom: 0;
+}
+
+.fantasy-critic-game strong {
+  overflow-wrap: anywhere;
+}
+
+.fantasy-critic-game span {
+  color: var(--muted);
+  font-weight: 800;
+  text-align: right;
+}
+
 .gallery-grid {
   display: grid;
   gap: 18px;
@@ -642,6 +774,35 @@ tr:last-child td {
   .pair-table td {
     font-size: 1rem;
     padding: 12px 15px;
+  }
+
+  .league-detail-heading {
+    align-items: flex-start;
+    display: grid;
+  }
+
+  .fantasy-critic-summary {
+    grid-template-columns: 58px minmax(0, 1fr) 78px;
+    padding: 13px;
+  }
+
+  .fantasy-critic-rank strong,
+  .fantasy-critic-points strong {
+    font-size: 1.15rem;
+  }
+
+  .fantasy-critic-meta {
+    padding: 10px 13px;
+  }
+
+  .fantasy-critic-game {
+    gap: 8px 12px;
+    grid-template-columns: minmax(0, 1fr) 74px 58px;
+    padding: 10px 13px;
+  }
+
+  .fantasy-critic-game span {
+    font-size: 0.9rem;
   }
 
   .standings-table {
