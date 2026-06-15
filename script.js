@@ -5,6 +5,7 @@ const pages = document.querySelectorAll("[data-page]");
 const tabs = document.querySelectorAll("[data-tab]");
 const tabPanels = document.querySelectorAll("[data-tab-panel]");
 const hiddenLeaguesLinks = document.querySelectorAll("[data-hidden-leagues-link]");
+const headerArt = document.querySelectorAll("[data-header-art]");
 const leagueYearSelect = document.querySelector("#league-year-select");
 const leagueList = document.querySelector("#league-list");
 const fantasyCritic2025Content = document.querySelector("#fantasy-critic-2025-content");
@@ -154,6 +155,10 @@ function showPage(pageName, options = {}) {
 
   pageLinks.forEach((link) => {
     link.classList.toggle("is-active", link.dataset.pageLink === activePageName);
+  });
+
+  headerArt.forEach((art) => {
+    art.classList.toggle("is-active", art.dataset.headerArt === activePageName);
   });
 
   if (options.scrollToTop) {

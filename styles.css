@@ -62,8 +62,30 @@ a {
   width: 100%;
 }
 
+.header-page-art {
+  display: none;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+  min-width: 180px;
+}
+
+.header-page-art.is-active {
+  display: flex;
+}
+
+.header-page-art img {
+  border-radius: 4px;
+  display: block;
+  height: 58px;
+  max-width: min(520px, 100%);
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+}
+
 .nav-links {
   display: flex;
+  flex: 0 0 auto;
   flex-wrap: wrap;
   gap: 8px;
 }
@@ -725,6 +747,17 @@ tr:last-child td {
   .nav-links {
     gap: 8px;
     margin-top: 12px;
+  }
+
+  .header-page-art {
+    justify-content: flex-start;
+    margin-top: 12px;
+    min-width: 0;
+  }
+
+  .header-page-art img {
+    height: 42px;
+    max-width: 100%;
   }
 
   .nav-links a {
