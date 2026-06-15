@@ -11,10 +11,20 @@ const leagueYearSelect = document.querySelector("#league-year-select");
 const leagueList = document.querySelector("#league-list");
 const fantasyCritic2025Content = document.querySelector("#fantasy-critic-2025-content");
 const fantasyCritic2026Content = document.querySelector("#fantasy-critic-2026-content");
-const formulaOneQuestionSelect = document.querySelector("#formula-one-question-select");
-const formulaOneQuestionFilter = document.querySelector("#formula-one-question-filter");
-const formulaOneQuestionList = document.querySelector("#formula-one-question-list");
-const formulaOneResultsRows = document.querySelector("#formula-one-results-rows");
+const formulaOneViews = {
+  2024: {
+    questionSelect: document.querySelector("#formula-one-question-select"),
+    questionFilter: document.querySelector("#formula-one-question-filter"),
+    questionList: document.querySelector("#formula-one-question-list"),
+    resultsRows: document.querySelector("#formula-one-results-rows"),
+  },
+  2025: {
+    questionSelect: document.querySelector("#formula-one-2025-question-select"),
+    questionFilter: document.querySelector("#formula-one-2025-question-filter"),
+    questionList: document.querySelector("#formula-one-2025-question-list"),
+    resultsRows: document.querySelector("#formula-one-2025-results-rows"),
+  },
+};
 const resultCards = document.querySelectorAll("[data-result-card]");
 const todayMatchList = document.querySelector("#today-match-list");
 const tomorrowMatchList = document.querySelector("#tomorrow-match-list");
@@ -271,6 +281,7 @@ const FANTASY_CRITIC_2026 = {
 function showPage(pageName, options = {}) {
   const pageAliases = {
     "formula-1-2024": "formula-1-2024-questions",
+    "formula-1-2025": "formula-1-2025-questions",
     "manager-scores": "standings",
     "player-scores": "standings",
   };
@@ -281,6 +292,8 @@ function showPage(pageName, options = {}) {
     "fantasy-critic-2026",
     "formula-1-2024-questions",
     "formula-1-2024-results",
+    "formula-1-2025-questions",
+    "formula-1-2025-results",
   ];
 
   if (hiddenLeaguePages.includes(resolvedPageName) && !isLeagueDirectoryEnabled()) {
@@ -321,12 +334,20 @@ function getHeaderArtName(pageName) {
     return "formula-one-2024";
   }
 
+  if (pageName.startsWith("formula-1-2025")) {
+    return "formula-one-2025";
+  }
+
   return pageName;
 }
 
 function getNavScope(pageName) {
   if (pageName.startsWith("formula-1-2024")) {
     return "formula-one-2024";
+  }
+
+  if (pageName.startsWith("formula-1-2025")) {
+    return "formula-one-2025";
   }
 
   if (pageName === "leagues") {
@@ -339,6 +360,11 @@ function getNavScope(pageName) {
 function rememberNavScope(pageName) {
   if (pageName.startsWith("formula-1-2024")) {
     sessionStorage.setItem("boxThisLapActiveNavScope", "formula-one-2024");
+    return;
+  }
+
+  if (pageName.startsWith("formula-1-2025")) {
+    sessionStorage.setItem("boxThisLapActiveNavScope", "formula-one-2025");
     return;
   }
 
@@ -385,7 +411,7 @@ function renderLeagueList(year) {
   leagueList.innerHTML = leagues.map((league) => {
     const isWorldCup = year === "2026" && league === "World Cup";
     const isFantasyCritic = (year === "2025" || year === "2026") && league === "Fantasy Critic";
-    const isFormulaOne = year === "2024" && league === "Formula 1";
+    const isFormulaOne = (year === "2024" || year === "2025") && league === "Formula 1";
     const canOpen = isWorldCup || isFantasyCritic || isFormulaOne;
 
     return `
@@ -409,7 +435,7 @@ function renderLeagueCardAction({ isWorldCup, isFantasyCritic, isFormulaOne, can
   }
 
   if (isFormulaOne) {
-    return `<a class="league-card-link" href="#formula-1-2024-questions" data-page-link="formula-1-2024-questions">Open</a>`;
+    return `<a class="league-card-link" href="#formula-1-${escapeHtml(year)}-questions" data-page-link="formula-1-${escapeHtml(year)}-questions">Open</a>`;
   }
 
   return `<button class="league-card-link" type="button" ${canOpen ? "" : "disabled"}>Planned</button>`;
@@ -487,7 +513,7 @@ function renderFantasyCriticGame([game, critic, points]) {
   `;
 }
 
-function parseFormulaOne2024(csvText) {
+function parseFormulaOneSheet(csvText) {
   const rows = parseCsvMatrix(csvText).filter((row) => row.some((value) => value.trim() !== ""));
   const managerRow = rows[0] ?? [];
   const headerRow = rows[1] ?? [];
@@ -532,19 +558,21 @@ function parseFormulaOne2024(csvText) {
   return { questions, standings: rankRows(standings) };
 }
 
-function renderFormulaOne2024(data) {
-  siteData.formulaOne2024 = data;
-  renderFormulaOneQuestionOptions(data.questions);
-  renderFormulaOneQuestions();
-  renderFormulaOneResults(data.standings);
+function renderFormulaOneLeague(year, data) {
+  siteData[`formulaOne${year}`] = data;
+  renderFormulaOneQuestionOptions(year, data.questions);
+  renderFormulaOneQuestions(year);
+  renderFormulaOneResults(year, data.standings);
 }
 
-function renderFormulaOneQuestionOptions(questions) {
-  if (!formulaOneQuestionSelect) {
+function renderFormulaOneQuestionOptions(year, questions) {
+  const view = formulaOneViews[year];
+
+  if (!view?.questionSelect) {
     return;
   }
 
-  formulaOneQuestionSelect.innerHTML = `
+  view.questionSelect.innerHTML = `
     <option value="">All questions</option>
     ${questions.map((question) => {
       return `<option value="${escapeHtml(question.id)}" title="${escapeHtml(question.question)}">Question ${escapeHtml(question.number)}</option>`;
@@ -552,19 +580,21 @@ function renderFormulaOneQuestionOptions(questions) {
   `;
 }
 
-function renderFormulaOneQuestions() {
-  if (!formulaOneQuestionList) {
+function renderFormulaOneQuestions(year) {
+  const view = formulaOneViews[year];
+
+  if (!view?.questionList) {
     return;
   }
 
-  const data = siteData.formulaOne2024;
+  const data = siteData[`formulaOne${year}`];
 
   if (!data) {
     return;
   }
 
-  const selectedQuestion = formulaOneQuestionSelect?.value ?? "";
-  const filterText = (formulaOneQuestionFilter?.value ?? "").trim().toLowerCase();
+  const selectedQuestion = view.questionSelect?.value ?? "";
+  const filterText = (view.questionFilter?.value ?? "").trim().toLowerCase();
   const questions = data.questions.filter((question) => {
     if (selectedQuestion && question.id !== selectedQuestion) {
       return false;
@@ -578,11 +608,11 @@ function renderFormulaOneQuestions() {
   });
 
   if (questions.length === 0) {
-    formulaOneQuestionList.innerHTML = `<article class="formula-one-question-card"><p class="table-message">No Formula 1 questions match that filter.</p></article>`;
+    view.questionList.innerHTML = `<article class="formula-one-question-card"><p class="table-message">No Formula 1 questions match that filter.</p></article>`;
     return;
   }
 
-  formulaOneQuestionList.innerHTML = questions.map(renderFormulaOneQuestion).join("");
+  view.questionList.innerHTML = questions.map(renderFormulaOneQuestion).join("");
 }
 
 function renderFormulaOneQuestion(question) {
@@ -614,17 +644,19 @@ function renderFormulaOneBet(bet) {
   `;
 }
 
-function renderFormulaOneResults(standings) {
-  if (!formulaOneResultsRows) {
+function renderFormulaOneResults(year, standings) {
+  const view = formulaOneViews[year];
+
+  if (!view?.resultsRows) {
     return;
   }
 
   if (standings.length === 0) {
-    formulaOneResultsRows.innerHTML = `<tr><td class="table-message" colspan="3">No Formula 1 results were loaded.</td></tr>`;
+    view.resultsRows.innerHTML = `<tr><td class="table-message" colspan="3">No Formula 1 results were loaded.</td></tr>`;
     return;
   }
 
-  formulaOneResultsRows.innerHTML = standings.map((entry) => {
+  view.resultsRows.innerHTML = standings.map((entry) => {
     const manager = getManagerByName(entry.manager) ?? { name: entry.manager };
 
     return `
@@ -637,13 +669,15 @@ function renderFormulaOneResults(standings) {
   }).join("");
 }
 
-function renderFormulaOneError(error) {
-  if (formulaOneQuestionList) {
-    formulaOneQuestionList.innerHTML = `<article class="formula-one-question-card"><p class="table-message">Unable to load Formula 1 questions: ${escapeHtml(error.message)}</p></article>`;
+function renderFormulaOneError(year, error) {
+  const view = formulaOneViews[year];
+
+  if (view?.questionList) {
+    view.questionList.innerHTML = `<article class="formula-one-question-card"><p class="table-message">Unable to load Formula 1 questions: ${escapeHtml(error.message)}</p></article>`;
   }
 
-  if (formulaOneResultsRows) {
-    formulaOneResultsRows.innerHTML = `<tr><td class="table-message" colspan="3">Unable to load Formula 1 results: ${escapeHtml(error.message)}</td></tr>`;
+  if (view?.resultsRows) {
+    view.resultsRows.innerHTML = `<tr><td class="table-message" colspan="3">Unable to load Formula 1 results: ${escapeHtml(error.message)}</td></tr>`;
   }
 }
 
@@ -738,14 +772,19 @@ leagueYearSelect?.addEventListener("change", () => {
   renderLeagueList(leagueYearSelect.value);
 });
 
-formulaOneQuestionSelect?.addEventListener("change", () => {
-  if (formulaOneQuestionFilter) {
-    formulaOneQuestionFilter.value = "";
-  }
+Object.entries(formulaOneViews).forEach(([year, view]) => {
+  view.questionSelect?.addEventListener("change", () => {
+    if (view.questionFilter) {
+      view.questionFilter.value = "";
+    }
 
-  renderFormulaOneQuestions();
+    renderFormulaOneQuestions(year);
+  });
+
+  view.questionFilter?.addEventListener("input", () => {
+    renderFormulaOneQuestions(year);
+  });
 });
-formulaOneQuestionFilter?.addEventListener("input", renderFormulaOneQuestions);
 
 resultCards.forEach((card) => {
   const toggle = card.querySelector("[data-result-toggle]");
@@ -884,13 +923,24 @@ loadMatches()
 
 loadSheetText("formulaOne2024")
   .then((csvText) => {
-    const data = parseFormulaOne2024(csvText);
-    renderFormulaOne2024(data);
+    const data = parseFormulaOneSheet(csvText);
+    renderFormulaOneLeague("2024", data);
     console.info("Box This Lap Formula 1 2024 data loaded", data);
   })
   .catch((error) => {
-    renderFormulaOneError(error);
+    renderFormulaOneError("2024", error);
     console.error("Box This Lap Formula 1 2024 data failed to load", error);
+  });
+
+loadSheetText("formulaOne2025")
+  .then((csvText) => {
+    const data = parseFormulaOneSheet(csvText);
+    renderFormulaOneLeague("2025", data);
+    console.info("Box This Lap Formula 1 2025 data loaded", data);
+  })
+  .catch((error) => {
+    renderFormulaOneError("2025", error);
+    console.error("Box This Lap Formula 1 2025 data failed to load", error);
   });
 
 function renderMatchdayPicker(matches) {

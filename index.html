@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Box This Lap | Results</title>
-    <link rel="stylesheet" href="styles.css?v=202606150011">
+    <link rel="stylesheet" href="styles.css?v=202606150012">
   </head>
   <body class="is-routing">
     <header class="site-header">
@@ -30,6 +30,15 @@
             <img src="assets/formula-1-2024-header.jpg?v=202606150001" alt="">
           </picture>
         </div>
+        <div class="header-page-art" data-header-art="formula-one-2025" aria-hidden="true">
+          <picture>
+            <source
+              srcset="assets/formula-1-2025-header-landscape.jpg?v=202606150001"
+              media="(orientation: landscape) and (max-height: 520px)"
+            >
+            <img src="assets/formula-1-2025-header.jpg?v=202606150001" alt="">
+          </picture>
+        </div>
         <div class="nav-links" data-nav-scope="world-cup" role="tablist" aria-label="Site sections">
           <a href="#today" data-page-link="today" role="tab">Today</a>
           <a href="#tomorrow" data-page-link="tomorrow" role="tab">Tomorrow</a>
@@ -40,6 +49,11 @@
         <div class="nav-links" data-nav-scope="formula-one-2024" role="tablist" aria-label="Formula 1 sections" hidden>
           <a href="#formula-1-2024-questions" data-page-link="formula-1-2024-questions" role="tab">Questions</a>
           <a href="#formula-1-2024-results" data-page-link="formula-1-2024-results" role="tab">Results</a>
+          <a href="#leagues" data-page-link="leagues" data-hidden-leagues-link role="tab" hidden>Leagues</a>
+        </div>
+        <div class="nav-links" data-nav-scope="formula-one-2025" role="tablist" aria-label="Formula 1 sections" hidden>
+          <a href="#formula-1-2025-questions" data-page-link="formula-1-2025-questions" role="tab">Questions</a>
+          <a href="#formula-1-2025-results" data-page-link="formula-1-2025-results" role="tab">Results</a>
           <a href="#leagues" data-page-link="leagues" data-hidden-leagues-link role="tab" hidden>Leagues</a>
         </div>
       </nav>
@@ -427,8 +441,61 @@
           </table>
         </div>
       </section>
+
+      <section class="page league-detail-page" id="formula-1-2025-questions" data-page="formula-1-2025-questions">
+        <div class="league-detail-heading">
+          <div>
+            <h2>Formula 1</h2>
+            <p>2025 Questions</p>
+          </div>
+        </div>
+
+        <div class="formula-one-controls">
+          <label class="select-control">
+            <span>Question</span>
+            <select id="formula-one-2025-question-select">
+              <option value="">All questions</option>
+            </select>
+          </label>
+          <label class="filter-control">
+            <span>Filter</span>
+            <input id="formula-one-2025-question-filter" type="search" placeholder="Search">
+          </label>
+        </div>
+        <div class="formula-one-question-list" id="formula-one-2025-question-list">
+          <article class="formula-one-question-card">
+            <p class="table-message">Loading Formula 1 questions...</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="page league-detail-page" id="formula-1-2025-results" data-page="formula-1-2025-results">
+        <div class="league-detail-heading">
+          <div>
+            <h2>Formula 1</h2>
+            <p>2025 Results</p>
+          </div>
+        </div>
+
+        <div class="table-wrap standings-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Manager</th>
+                <th>Points</th>
+              </tr>
+            </thead>
+            <tbody id="formula-one-2025-results-rows" class="compact-manager-rows">
+              <tr>
+                <td class="table-message" colspan="3">Loading Formula 1 results...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </main>
 
-    <script type="module" src="script.js?v=202606150015"></script>
+    <script type="module" src="script.js?v=202606150016"></script>
   </body>
 </html>
