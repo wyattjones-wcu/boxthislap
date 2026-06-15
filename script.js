@@ -6,6 +6,7 @@ const tabs = document.querySelectorAll("[data-tab]");
 const tabPanels = document.querySelectorAll("[data-tab-panel]");
 const hiddenLeaguesLinks = document.querySelectorAll("[data-hidden-leagues-link]");
 const headerArt = document.querySelectorAll("[data-header-art]");
+const navGroups = document.querySelectorAll("[data-nav-scope]");
 const leagueYearSelect = document.querySelector("#league-year-select");
 const leagueList = document.querySelector("#league-list");
 const fantasyCritic2025Content = document.querySelector("#fantasy-critic-2025-content");
@@ -268,19 +269,27 @@ const FANTASY_CRITIC_2026 = {
 };
 
 function showPage(pageName, options = {}) {
-  const hiddenLeaguePages = ["leagues", "fantasy-critic-2025", "fantasy-critic-2026", "formula-1-2024"];
-
-  if (hiddenLeaguePages.includes(pageName) && !isLeagueDirectoryEnabled()) {
-    pageName = "results";
-  }
-
   const pageAliases = {
+    "formula-1-2024": "formula-1-2024-questions",
     "manager-scores": "standings",
     "player-scores": "standings",
   };
   const resolvedPageName = pageAliases[pageName] || pageName;
-  const pageExists = [...pages].some((page) => page.dataset.page === resolvedPageName);
-  const activePageName = pageExists ? resolvedPageName : "results";
+  const hiddenLeaguePages = [
+    "leagues",
+    "fantasy-critic-2025",
+    "fantasy-critic-2026",
+    "formula-1-2024-questions",
+    "formula-1-2024-results",
+  ];
+
+  if (hiddenLeaguePages.includes(resolvedPageName) && !isLeagueDirectoryEnabled()) {
+    pageName = "results";
+  }
+
+  const allowedPageName = pageAliases[pageName] || pageName;
+  const pageExists = [...pages].some((page) => page.dataset.page === allowedPageName);
+  const activePageName = pageExists ? allowedPageName : "results";
 
   pages.forEach((page) => {
     page.classList.toggle("is-active", page.dataset.page === activePageName);
@@ -291,13 +300,50 @@ function showPage(pageName, options = {}) {
   });
 
   headerArt.forEach((art) => {
-    art.classList.toggle("is-active", art.dataset.headerArt === activePageName);
+    art.classList.toggle("is-active", art.dataset.headerArt === getHeaderArtName(activePageName));
+  });
+
+  rememberNavScope(activePageName);
+
+  navGroups.forEach((group) => {
+    group.hidden = group.dataset.navScope !== getNavScope(activePageName);
   });
 
   document.body.classList.remove("is-routing");
 
   if (options.scrollToTop) {
     scrollToPageTop();
+  }
+}
+
+function getHeaderArtName(pageName) {
+  if (pageName.startsWith("formula-1-2024")) {
+    return "formula-one-2024";
+  }
+
+  return pageName;
+}
+
+function getNavScope(pageName) {
+  if (pageName.startsWith("formula-1-2024")) {
+    return "formula-one-2024";
+  }
+
+  if (pageName === "leagues") {
+    return sessionStorage.getItem("boxThisLapActiveNavScope") || "world-cup";
+  }
+
+  return "world-cup";
+}
+
+function rememberNavScope(pageName) {
+  if (pageName.startsWith("formula-1-2024")) {
+    sessionStorage.setItem("boxThisLapActiveNavScope", "formula-one-2024");
+    return;
+  }
+
+  if (pageName !== "leagues") {
+    sessionStorage.setItem("boxThisLapActiveNavScope", "world-cup");
   }
 }
 
@@ -363,7 +409,7 @@ function renderLeagueCardAction({ isWorldCup, isFantasyCritic, isFormulaOne, can
   }
 
   if (isFormulaOne) {
-    return `<a class="league-card-link" href="#formula-1-2024" data-page-link="formula-1-2024">Open</a>`;
+    return `<a class="league-card-link" href="#formula-1-2024-questions" data-page-link="formula-1-2024-questions">Open</a>`;
   }
 
   return `<button class="league-card-link" type="button" ${canOpen ? "" : "disabled"}>Planned</button>`;
