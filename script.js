@@ -2292,9 +2292,9 @@ function getPositionIconSvg(position) {
     `,
     forward: `
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <circle cx="12" cy="12" r="8"></circle>
-        <path d="M10 10.5l2-1.5 2 1.5-.8 2.5h-2.4l-.8-2.5z"></path>
-        <path d="M12 9V6.5M10.8 13l-2.3 2M13.2 13l2.3 2M10 10.5l-2.5-.9M14 10.5l2.5-.9"></path>
+        <path d="M5 17V8h14v9"></path>
+        <path d="M5 11h14M9.5 8v9M14.5 8v9"></path>
+        <circle cx="12" cy="16" r="2"></circle>
       </svg>
     `,
     goalkeeper: `
