@@ -1,4 +1,4 @@
-import { loadMatches, loadPlayers, loadSheet, loadSheetText } from "./dataLoader.js?v=202606150001";
+import { loadMatches, loadPlayers, loadSheet, loadSheetText } from "./dataLoader.js?v=202606170001";
 
 const pageLinks = document.querySelectorAll("[data-page-link]");
 const pages = document.querySelectorAll("[data-page]");
@@ -1278,7 +1278,19 @@ syncThemeToggle();
 loadPlayers()
   .then((players) => {
     siteData.players = players;
+    siteData.playerPositionLookups = buildPlayerPositionLookups(players);
     renderTestingPlayers(players);
+
+    if (siteData.playerPerformances) {
+      renderPlayerChampionship(siteData.playerPerformances);
+    }
+
+    if (siteData.matches) {
+      renderMatchesForDate(todayMatchList, siteData.matches, getDateKey(0));
+      renderMatchesForDate(tomorrowMatchList, siteData.matches, getDateKey(1));
+      renderMatchesForDate(matchdayMatchList, siteData.matches, matchdaySelect?.value || "");
+    }
+
     console.info("Box This Lap player data loaded", players);
   })
   .catch((error) => {
@@ -1526,7 +1538,7 @@ function renderMatchRows(pairs) {
   return pairs.map(([name, manager]) => {
     return `
       <tr>
-        <th scope="row">${formatDataName(name)}</th>
+        <th scope="row">${renderMatchDataName(name)}</th>
         <td>${renderMatchManager(manager)}</td>
       </tr>
     `;
@@ -1652,7 +1664,7 @@ function renderPlayerChampionship(performances) {
     return `
       <tr>
         <td data-label="Rank">${player.rank}</td>
-        <td data-label="Player">${escapeHtml(player.name)}</td>
+        <td data-label="Player">${renderPlayerNameWithPosition(player.name, player.position)}</td>
         <td data-label="Team / Manager">${renderStandingDetail(player.team, manager)}</td>
         <td data-label="Matches">${escapeHtml(formatMatchCount(player.matches))}</td>
         <td data-label="Points">${escapeHtml(formatPoints(player.points))}</td>
@@ -1677,18 +1689,24 @@ function getPlayerChampionshipRows(performances) {
       matches: 0,
       name: performance.Name,
       points: 0,
+      position: performance.Position,
       team: performance.Team,
     };
 
     player.matches += 1;
     player.points += points;
     player.name ||= performance.Name;
+    player.position ||= performance.Position;
     player.team ||= performance.Team;
     players.set(playerId, player);
   }
 
   return rankRows(
     [...players.values()]
+      .map((player) => ({
+        ...player,
+        position: player.position || getPlayerPosition(player),
+      }))
       .filter((player) => player.points > 0)
       .sort((firstPlayer, secondPlayer) => {
         if (secondPlayer.points !== firstPlayer.points) {
@@ -2053,6 +2071,29 @@ function buildManagerDraftLookups({ managers, teamDraft, playerDraft }) {
   return { managersById, nationManagers, playerManagersById, playerManagersByName };
 }
 
+function buildPlayerPositionLookups(players) {
+  const byId = new Map();
+  const byName = new Map();
+
+  for (const player of players) {
+    const position = normalizePlayerPosition(player.position);
+
+    if (!position) {
+      continue;
+    }
+
+    if (player.id) {
+      byId.set(String(player.id), position);
+    }
+
+    if (player.name) {
+      byName.set(getPlayerNameLookupKey(player.name), position);
+    }
+  }
+
+  return { byId, byName };
+}
+
 function renderManagerResultsError(error) {
   if (!managerResultsRows) {
     return;
@@ -2139,6 +2180,22 @@ function getPlayerManager(player) {
   return drafts.playerManagersById.get(String(player.id)) ?? drafts.playerManagersByName.get(normalizeLookupName(player.name));
 }
 
+function getPlayerPosition(player) {
+  const lookups = siteData.playerPositionLookups;
+
+  if (!lookups) {
+    return normalizePlayerPosition(player.position);
+  }
+
+  return lookups.byId.get(String(player.id)) ??
+    lookups.byName.get(getPlayerNameLookupKey(player.name)) ??
+    normalizePlayerPosition(player.position);
+}
+
+function getPlayerPositionByName(name) {
+  return siteData.playerPositionLookups?.byName.get(getPlayerNameLookupKey(name)) ?? null;
+}
+
 function getNationManager(nation) {
   return siteData.managerDrafts?.nationManagers.get(normalizeLookupName(normalizeNationName(nation))) ?? null;
 }
@@ -2181,6 +2238,121 @@ function renderManagerChip(manager) {
       <span class="manager-name">${escapeHtml(managerMeta.displayName)}</span>
     </span>
   `;
+}
+
+function renderMatchDataName(name) {
+  const position = getPlayerPositionByName(name);
+  const formattedName = formatDataName(name);
+
+  return position ? renderPlayerNameWithPosition(formattedName, position, { isHtml: true }) : formattedName;
+}
+
+function renderPlayerNameWithPosition(name, position, options = {}) {
+  const icon = renderPositionIcon(position);
+  const renderedName = options.isHtml ? name : escapeHtml(name);
+
+  if (!icon) {
+    return renderedName;
+  }
+
+  return `
+    <span class="player-position-label">
+      ${icon}
+      <span>${renderedName}</span>
+    </span>
+  `;
+}
+
+function renderPositionIcon(position) {
+  const normalizedPosition = normalizePlayerPosition(position);
+  const labels = {
+    defender: "Defender",
+    forward: "Forward",
+    goalkeeper: "Goalkeeper",
+    midfielder: "Midfielder",
+  };
+
+  if (!normalizedPosition) {
+    return "";
+  }
+
+  return `
+    <span class="position-icon position-icon--${normalizedPosition}" role="img" aria-label="${labels[normalizedPosition]}">
+      ${getPositionIconSvg(normalizedPosition)}
+    </span>
+  `;
+}
+
+function getPositionIconSvg(position) {
+  const icons = {
+    defender: `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 3l7 3v5c0 4.5-2.7 7.8-7 10-4.3-2.2-7-5.5-7-10V6l7-3z"></path>
+      </svg>
+    `,
+    forward: `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="8"></circle>
+        <path d="M12 4v16M4 12h16M7 7l10 10M17 7L7 17"></path>
+      </svg>
+    `,
+    goalkeeper: `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6 13V7a2 2 0 0 1 4 0v5"></path>
+        <path d="M10 12V5a2 2 0 0 1 4 0v7"></path>
+        <path d="M14 12V7a2 2 0 0 1 4 0v7"></path>
+        <path d="M6 13l2 6h8l2-5"></path>
+      </svg>
+    `,
+    midfielder: `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect x="4" y="5" width="16" height="14" rx="2"></rect>
+        <path d="M12 5v14M4 12h16"></path>
+        <circle cx="12" cy="12" r="2"></circle>
+      </svg>
+    `,
+  };
+
+  return icons[position] ?? "";
+}
+
+function normalizePlayerPosition(position) {
+  const value = normalizeLookupName(position);
+
+  if (!value) {
+    return null;
+  }
+
+  if (value.includes("goal") || value === "gk") {
+    return "goalkeeper";
+  }
+
+  if (value.includes("def") || ["cb", "lb", "rb", "lcb", "rcb", "lwb", "rwb"].includes(value)) {
+    return "defender";
+  }
+
+  if (value.includes("mid") || ["cm", "dm", "am", "cdm", "cam", "lm", "rm"].includes(value)) {
+    return "midfielder";
+  }
+
+  if (
+    value.includes("forward") ||
+    value.includes("striker") ||
+    value.includes("wing") ||
+    ["fw", "st", "cf", "lw", "rw"].includes(value)
+  ) {
+    return "forward";
+  }
+
+  return null;
+}
+
+function getPlayerNameLookupKey(name) {
+  return normalizeLookupName(
+    String(name ?? "")
+      .replace(/\([^)]*\)/g, " ")
+      .replace(/\s+/g, " ")
+  );
 }
 
 function renderTestingPlayers(players) {
