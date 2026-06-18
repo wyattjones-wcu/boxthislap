@@ -1,4 +1,4 @@
-import { loadMatches, loadPlayers, loadSheet, loadSheetText } from "./dataLoader.js?v=202606170001";
+import { loadMatches, loadPlayers, loadSheet, loadSheetText } from "./dataLoader.js?v=202606180002";
 
 const pageLinks = document.querySelectorAll("[data-page-link]");
 const pages = document.querySelectorAll("[data-page]");
@@ -23,6 +23,12 @@ const formulaOneViews = {
     questionFilter: document.querySelector("#formula-one-2025-question-filter"),
     questionList: document.querySelector("#formula-one-2025-question-list"),
     resultsRows: document.querySelector("#formula-one-2025-results-rows"),
+  },
+  2026: {
+    questionSelect: document.querySelector("#formula-one-2026-question-select"),
+    questionFilter: document.querySelector("#formula-one-2026-question-filter"),
+    questionList: document.querySelector("#formula-one-2026-question-list"),
+    resultsRows: document.querySelector("#formula-one-2026-results-rows"),
   },
 };
 const fantasyOfficeViews = {
@@ -301,6 +307,7 @@ function showPage(pageName, options = {}) {
   const pageAliases = {
     "formula-1-2024": "formula-1-2024-questions",
     "formula-1-2025": "formula-1-2025-questions",
+    "formula-1-2026": "formula-1-2026-questions",
     "fantasy-office-2025": "fantasy-office-2025-results",
     "fantasy-office-2026": "fantasy-office-2026-draft",
     "manager-scores": "standings",
@@ -345,6 +352,10 @@ function getHeaderArtName(pageName) {
     return "formula-one-2025";
   }
 
+  if (pageName.startsWith("formula-1-2026")) {
+    return "formula-one-2026";
+  }
+
   if (pageName.startsWith("fantasy-office-2025")) {
     return "fantasy-office-2025";
   }
@@ -367,6 +378,10 @@ function getNavScope(pageName) {
 
   if (pageName.startsWith("formula-1-2025")) {
     return "formula-one-2025";
+  }
+
+  if (pageName.startsWith("formula-1-2026")) {
+    return "formula-one-2026";
   }
 
   if (pageName.startsWith("fantasy-office-2025")) {
@@ -392,6 +407,11 @@ function rememberNavScope(pageName) {
 
   if (pageName.startsWith("formula-1-2025")) {
     sessionStorage.setItem("boxThisLapActiveNavScope", "formula-one-2025");
+    return;
+  }
+
+  if (pageName.startsWith("formula-1-2026")) {
+    sessionStorage.setItem("boxThisLapActiveNavScope", "formula-one-2026");
     return;
   }
 
@@ -475,7 +495,7 @@ function renderLeagueList(year) {
   leagueList.innerHTML = leagues.map((league) => {
     const isWorldCup = year === "2026" && league === "World Cup";
     const isFantasyCritic = (year === "2025" || year === "2026") && league === "Fantasy Critic";
-    const isFormulaOne = (year === "2024" || year === "2025") && league === "Formula 1";
+    const isFormulaOne = (year === "2024" || year === "2025" || year === "2026") && league === "Formula 1";
     const isFantasyOffice = (year === "2025" || year === "2026") && league === "Fantasy Office";
     const canOpen = isWorldCup || isFantasyCritic || isFormulaOne || isFantasyOffice;
 
@@ -647,9 +667,55 @@ function renderFormulaOneQuestionOptions(year, questions) {
   view.questionSelect.innerHTML = `
     <option value="">All questions</option>
     ${questions.map((question) => {
-      return `<option value="${escapeHtml(question.id)}" title="${escapeHtml(question.question)}">Question ${escapeHtml(question.number)}</option>`;
+      return `<option value="${escapeHtml(question.id)}" title="${escapeHtml(question.question)}">${escapeHtml(formatFormulaOneQuestionOption(question))}</option>`;
     }).join("")}
   `;
+}
+
+function formatFormulaOneQuestionOption(question) {
+  return `${question.number}. ${getFormulaOneQuestionSummary(question.question)}`;
+}
+
+function getFormulaOneQuestionSummary(questionText) {
+  const normalizedQuestion = String(questionText ?? "").trim();
+  const specialSummaries = [
+    [/last in the drivers championship/i, "Last in Drivers Championship"],
+    [/last in the world constructors championship/i, "Last in Constructors Championship"],
+    [/(^|\s)world drivers champion|driver'?s champion/i, "Driver's Champion"],
+    [/(^|\s)world constructors championship|constructor'?s champion/i, "Constructors Champion"],
+    [/bold prediction/i, "Bold Prediction"],
+  ];
+
+  for (const [pattern, summary] of specialSummaries) {
+    if (pattern.test(normalizedQuestion)) {
+      return summary;
+    }
+  }
+
+  return truncateQuestionSummary(normalizedQuestion
+    .replace(/\?$/g, "")
+    .replace(/^who will\s+/i, "")
+    .replace(/^which\s+/i, "")
+    .replace(/^what will\s+/i, "")
+    .replace(/^what\s+/i, "")
+    .replace(/^how many\s+/i, "How many ")
+    .replace(/^will\s+/i, "")
+    .trim());
+}
+
+function truncateQuestionSummary(summary) {
+  const maxLength = 54;
+  const normalizedSummary = capitalizeFirst(summary);
+
+  if (normalizedSummary.length <= maxLength) {
+    return normalizedSummary;
+  }
+
+  return `${normalizedSummary.slice(0, maxLength).replace(/\s+\S*$/, "")}...`;
+}
+
+function capitalizeFirst(value) {
+  return value ? `${value.charAt(0).toUpperCase()}${value.slice(1)}` : value;
 }
 
 function renderFormulaOneQuestions(year) {
@@ -1399,6 +1465,17 @@ loadSheetText("formulaOne2025")
   .catch((error) => {
     renderFormulaOneError("2025", error);
     console.error("Box This Lap Formula 1 2025 data failed to load", error);
+  });
+
+loadSheetText("formulaOne2026")
+  .then((csvText) => {
+    const data = parseFormulaOneSheet(csvText);
+    renderFormulaOneLeague("2026", data);
+    console.info("Box This Lap Formula 1 2026 data loaded", data);
+  })
+  .catch((error) => {
+    renderFormulaOneError("2026", error);
+    console.error("Box This Lap Formula 1 2026 data failed to load", error);
   });
 
 siteData.fantasyOffice2025 = { draft: [], movies: [], ordering: [], results: [] };
