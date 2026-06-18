@@ -1509,6 +1509,13 @@ function renderMatchCard(match) {
   const away = getField(match, "Away", "away") || "Away";
   const time = getField(match, "Time", "time") || "Time TBD";
   const pairs = Object.entries(getField(match, "Data", "data") || {});
+  const dataTable = pairs.length > 0 ? `
+      <table class="pair-table">
+        <tbody>
+          ${renderMatchRows(pairs)}
+        </tbody>
+      </table>
+  ` : "";
 
   return `
     <article class="match-card">
@@ -1516,25 +1523,12 @@ function renderMatchCard(match) {
         <h2>${escapeHtml(home)} v ${escapeHtml(away)}</h2>
         <p>${escapeHtml(time)}</p>
       </div>
-      <table class="pair-table">
-        <tbody>
-          ${renderMatchRows(pairs)}
-        </tbody>
-      </table>
+      ${dataTable}
     </article>
   `;
 }
 
 function renderMatchRows(pairs) {
-  if (pairs.length === 0) {
-    return `
-      <tr>
-        <th scope="row">Data</th>
-        <td>TBD</td>
-      </tr>
-    `;
-  }
-
   return pairs.map(([name, manager]) => {
     return `
       <tr>
