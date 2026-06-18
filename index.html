@@ -81,6 +81,11 @@
           <a href="#formula-1-2025-results" data-page-link="formula-1-2025-results" role="tab">Results</a>
           <a href="#leagues" data-page-link="leagues" role="tab">Leagues</a>
         </div>
+        <div class="nav-links" data-nav-scope="formula-one-2026" role="tablist" aria-label="Formula 1 sections" hidden>
+          <a href="#formula-1-2026-questions" data-page-link="formula-1-2026-questions" role="tab">Questions</a>
+          <a href="#formula-1-2026-results" data-page-link="formula-1-2026-results" role="tab">Results</a>
+          <a href="#leagues" data-page-link="leagues" role="tab">Leagues</a>
+        </div>
         <div class="nav-links" data-nav-scope="fantasy-office-2025" role="tablist" aria-label="Fantasy Office sections" hidden>
           <a href="#fantasy-office-2025-draft" data-page-link="fantasy-office-2025-draft" role="tab">Draft</a>
           <a href="#fantasy-office-2025-movies" data-page-link="fantasy-office-2025-movies" role="tab">Movies</a>
@@ -662,6 +667,59 @@
         </div>
       </section>
 
+      <section class="page league-detail-page" id="formula-1-2026-questions" data-page="formula-1-2026-questions">
+        <div class="league-detail-heading">
+          <div>
+            <h2>Formula 1</h2>
+            <p>2026 Questions</p>
+          </div>
+        </div>
+
+        <div class="formula-one-controls">
+          <label class="select-control">
+            <span>Question</span>
+            <select id="formula-one-2026-question-select">
+              <option value="">All questions</option>
+            </select>
+          </label>
+          <label class="filter-control">
+            <span>Filter</span>
+            <input id="formula-one-2026-question-filter" type="search" placeholder="Search">
+          </label>
+        </div>
+        <div class="formula-one-question-list" id="formula-one-2026-question-list">
+          <article class="formula-one-question-card">
+            <p class="table-message">Loading Formula 1 questions...</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="page league-detail-page" id="formula-1-2026-results" data-page="formula-1-2026-results">
+        <div class="league-detail-heading">
+          <div>
+            <h2>Formula 1</h2>
+            <p>2026 Results</p>
+          </div>
+        </div>
+
+        <div class="table-wrap standings-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Manager</th>
+                <th>Points</th>
+              </tr>
+            </thead>
+            <tbody id="formula-one-2026-results-rows" class="compact-manager-rows">
+              <tr>
+                <td class="table-message" colspan="3">Loading Formula 1 results...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <section class="page league-detail-page" id="fantasy-office-2025-draft" data-page="fantasy-office-2025-draft">
         <div class="league-detail-heading">
           <div>
@@ -761,6 +819,6 @@
       </div>
     </footer>
 
-    <script type="module" src="script.js?v=202606180002"></script>
+    <script type="module" src="script.js?v=202606180004"></script>
   </body>
 </html>
