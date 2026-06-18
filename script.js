@@ -678,11 +678,28 @@ function formatFormulaOneQuestionOption(question) {
 
 function getFormulaOneQuestionSummary(questionText) {
   const normalizedQuestion = String(questionText ?? "").trim();
+  const comparisonSummary = getFormulaOneComparisonSummary(normalizedQuestion);
+
+  if (comparisonSummary) {
+    return comparisonSummary;
+  }
+
   const specialSummaries = [
     [/last in the drivers championship/i, "Last in Drivers Championship"],
     [/last in the world constructors championship/i, "Last in Constructors Championship"],
     [/(^|\s)world drivers champion|driver'?s champion/i, "Driver's Champion"],
     [/(^|\s)world constructors championship|constructor'?s champion/i, "Constructors Champion"],
+    [/finish on the podium/i, "Podium Finishers"],
+    [/driver of the day/i, "Driver of the Day Awards"],
+    [/closest teammate pair in qualifying/i, "Closest Teammates: Qualifying"],
+    [/closest teammate pair in the grand prix/i, "Closest Teammates: Grand Prix"],
+    [/sprint race champion/i, "Sprint Race Champion"],
+    [/overtake award/i, "Overtake Award"],
+    [/final championship order/i, "Championship Order"],
+    [/fewest racing laps/i, "Fewest Racing Laps"],
+    [/most classified dnfs/i, "Most Classified DNFs"],
+    [/fastest pit stop/i, "Fastest Pit Stop"],
+    [/safety car/i, "Safety Cars"],
     [/bold prediction/i, "Bold Prediction"],
   ];
 
@@ -701,6 +718,22 @@ function getFormulaOneQuestionSummary(questionText) {
     .replace(/^how many\s+/i, "How many ")
     .replace(/^will\s+/i, "")
     .trim());
+}
+
+function getFormulaOneComparisonSummary(questionText) {
+  const teammatePairing = questionText.match(/teammate pairing of (.+?) and (.+?)\?/i);
+
+  if (teammatePairing) {
+    return `${teammatePairing[1].trim()} v ${teammatePairing[2].trim()}`;
+  }
+
+  const directComparison = questionText.match(/between (.+?) and (.+?)\?/i);
+
+  if (directComparison) {
+    return `${directComparison[1].trim()} v ${directComparison[2].trim()}`;
+  }
+
+  return "";
 }
 
 function truncateQuestionSummary(summary) {
@@ -769,11 +802,11 @@ function renderFormulaOneQuestion(question) {
 }
 
 function renderFormulaOneAnswer(question) {
-  if (isBoldPredictionQuestion(question.question)) {
+  if (isBoldPredictionQuestion(question.question) || !question.answer) {
     return "";
   }
 
-  return `<p>Answer: <strong>${escapeHtml(question.answer || "No answer listed")}</strong></p>`;
+  return `<p>Answer: <strong>${escapeHtml(question.answer)}</strong></p>`;
 }
 
 function isBoldPredictionQuestion(question) {
