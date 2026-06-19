@@ -56,6 +56,7 @@ const playerChampionshipRows = document.querySelector("#player-championship-rows
 const nationsLeagueRows = document.querySelector("#nations-league-rows");
 const managerResultsRows = document.querySelector("#manager-results-rows");
 const managerResultsFilter = document.querySelector("#manager-results-filter");
+const standingsAllDataToggle = document.querySelector("#standings-all-data-toggle");
 const testingPlayerRows = document.querySelector("#testing-player-rows");
 
 const siteData = {};
@@ -1368,6 +1369,16 @@ managerResultsFilter?.addEventListener("change", () => {
   }
 });
 
+standingsAllDataToggle?.addEventListener("change", () => {
+  if (siteData.playerPerformances) {
+    renderPlayerChampionship(siteData.playerPerformances);
+  }
+
+  if (siteData.matchResults) {
+    renderNationsLeague(siteData.matchResults);
+  }
+});
+
 window.addEventListener("hashchange", () => {
   showPage(window.location.hash.replace("#", "") || "results", { scrollToTop: true });
 });
@@ -1763,7 +1774,7 @@ function renderPlayerChampionship(performances) {
     return;
   }
 
-  const rows = getPlayerChampionshipRows(performances);
+  const rows = filterStandingRowsByGameScope(getPlayerChampionshipRows(performances), getPlayerManager);
 
   if (rows.length === 0) {
     playerChampionshipRows.innerHTML = `<tr><td class="table-message" colspan="5">No player performance data found.</td></tr>`;
@@ -1860,7 +1871,7 @@ function renderNationsLeague(results) {
     return;
   }
 
-  const rows = getNationsLeagueRows(results);
+  const rows = filterStandingRowsByGameScope(getNationsLeagueRows(results), (nation) => getNationManager(nation.name));
 
   if (rows.length === 0) {
     nationsLeagueRows.innerHTML = `<tr><td class="table-message" colspan="5">No Nations League results found.</td></tr>`;
@@ -1880,6 +1891,22 @@ function renderNationsLeague(results) {
       </tr>
     `;
   }).join("");
+}
+
+function filterStandingRowsByGameScope(rows, getManager) {
+  if (shouldShowAllStandingsData()) {
+    return rows;
+  }
+
+  return rankRows(
+    rows
+      .filter((row) => Boolean(getManager(row)))
+      .map(({ rank, ...row }) => row)
+  );
+}
+
+function shouldShowAllStandingsData() {
+  return standingsAllDataToggle?.checked ?? true;
 }
 
 function getNationsLeagueRows(results) {
