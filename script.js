@@ -697,6 +697,13 @@ function parseFormulaOneWeeklySheet(csvText) {
           wildcardQualifying: entryRow[10]?.trim() ?? "",
           wildcardRace: entryRow[11]?.trim() ?? "",
         },
+        points: {
+          p1: parsePoints(entryRow[14]),
+          p2: parsePoints(entryRow[15]),
+          p3: parsePoints(entryRow[16]),
+          wildcardQualifying: parsePoints(entryRow[17]),
+          wildcardRace: parsePoints(entryRow[18]),
+        },
         total: parsePoints(entryRow[19]),
       };
 
@@ -1033,24 +1040,48 @@ function renderFormulaOneWeeklyEntry(entry) {
         <strong>${escapeHtml(formatPoints(entry.total))}</strong>
       </div>
       <div class="formula-one-weekly-picks">
-        ${renderFormulaOneWeeklyPick("P1", entry.picks.p1, entry.positions.p1)}
-        ${renderFormulaOneWeeklyPick("P2", entry.picks.p2, entry.positions.p2)}
-        ${renderFormulaOneWeeklyPick("P3", entry.picks.p3, entry.positions.p3)}
-        ${renderFormulaOneWeeklyPick("* Q", entry.picks.wildcard, entry.positions.wildcardQualifying)}
-        ${renderFormulaOneWeeklyPick("* R", entry.picks.wildcard, entry.positions.wildcardRace)}
+        ${renderFormulaOneWeeklyPick("P1", entry.picks.p1, entry.positions.p1, entry.points.p1)}
+        ${renderFormulaOneWeeklyPick("P2", entry.picks.p2, entry.positions.p2, entry.points.p2)}
+        ${renderFormulaOneWeeklyPick("P3", entry.picks.p3, entry.positions.p3, entry.points.p3)}
+        ${renderFormulaOneWeeklyWildcard(entry)}
       </div>
     </section>
   `;
 }
 
-function renderFormulaOneWeeklyPick(label, pick, position) {
+function renderFormulaOneWeeklyPick(label, pick, position, points) {
+  if (!pick) {
+    return "";
+  }
+
   return `
     <div class="formula-one-weekly-pick">
       <span>${escapeHtml(label)}</span>
-      <strong>${escapeHtml(pick || "-")}</strong>
-      <em>${escapeHtml(position ? formatFormulaOnePosition(position) : "-")}</em>
+      <strong>${escapeHtml(pick)}</strong>
+      <em>${escapeHtml(formatFormulaOneWeeklyPickResult(position, points))}</em>
     </div>
   `;
+}
+
+function renderFormulaOneWeeklyWildcard(entry) {
+  if (!entry.picks.wildcard) {
+    return "";
+  }
+
+  return `
+    <div class="formula-one-weekly-pick formula-one-weekly-pick--wildcard">
+      <span>Wildcard</span>
+      <strong>${escapeHtml(entry.picks.wildcard)}</strong>
+      <div class="formula-one-weekly-wildcard-results">
+        <em>${escapeHtml(`Q ${formatFormulaOneWeeklyPickResult(entry.positions.wildcardQualifying, entry.points.wildcardQualifying)}`)}</em>
+        <em>${escapeHtml(`R ${formatFormulaOneWeeklyPickResult(entry.positions.wildcardRace, entry.points.wildcardRace)}`)}</em>
+      </div>
+    </div>
+  `;
+}
+
+function formatFormulaOneWeeklyPickResult(position, points) {
+  return `${formatFormulaOnePosition(position)} - ${formatPoints(points)} pts`;
 }
 
 function formatFormulaOnePosition(position) {
