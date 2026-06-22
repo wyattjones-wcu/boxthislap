@@ -47,7 +47,8 @@ const fantasyOfficeMovieSort = {
   direction: "desc",
   key: "points",
 };
-const resultCards = document.querySelectorAll("[data-result-card]");
+const resultsPage = document.querySelector("#results");
+const dynamicResultImages = document.querySelector("#dynamic-result-images");
 const todayMatchList = document.querySelector("#today-match-list");
 const tomorrowMatchList = document.querySelector("#tomorrow-match-list");
 const matchdaySelect = document.querySelector("#matchday-select");
@@ -1293,6 +1294,59 @@ function parseRoundOptions(csvText) {
   return rounds;
 }
 
+function parseResultImages(csvText) {
+  const rows = parseCsvMatrix(csvText);
+  const headerIndex = rows.findIndex((row) => {
+    const normalizedHeaders = row.map(normalizeLookupName);
+
+    return normalizedHeaders.includes("match id") &&
+      normalizedHeaders.includes("image url") &&
+      normalizedHeaders.includes("home") &&
+      normalizedHeaders.includes("home score") &&
+      normalizedHeaders.includes("away") &&
+      normalizedHeaders.includes("away score");
+  });
+
+  if (headerIndex === -1) {
+    return [];
+  }
+
+  const headerRow = rows[headerIndex];
+  const columns = Object.fromEntries(
+    headerRow.map((header, index) => [normalizeLookupName(header), index])
+  );
+  const resultImages = [];
+
+  for (const row of rows.slice(headerIndex + 1)) {
+    const isBlankRow = row.every((value) => !String(value ?? "").trim());
+
+    if (isBlankRow) {
+      break;
+    }
+
+    const imageUrl = row[columns["image url"]]?.trim() ?? "";
+    const home = row[columns.home]?.trim() ?? "";
+    const homeScore = row[columns["home score"]]?.trim() ?? "";
+    const away = row[columns.away]?.trim() ?? "";
+    const awayScore = row[columns["away score"]]?.trim() ?? "";
+
+    if (!imageUrl || !home || !away || homeScore === "" || awayScore === "") {
+      continue;
+    }
+
+    resultImages.push({
+      away,
+      awayScore,
+      home,
+      homeScore,
+      imageUrl,
+      matchId: row[columns["match id"]]?.trim() ?? "",
+    });
+  }
+
+  return resultImages;
+}
+
 function renderStandingsRoundOptions(rounds) {
   if (!standingsRoundSelect) {
     return;
@@ -1309,6 +1363,44 @@ function renderStandingsRoundOptions(rounds) {
   }
 
   standingsRoundSelect.innerHTML = options.join("");
+}
+
+function renderResultImages(resultImages) {
+  if (!dynamicResultImages) {
+    return;
+  }
+
+  if (resultImages.length === 0) {
+    dynamicResultImages.hidden = true;
+    dynamicResultImages.innerHTML = "";
+    return;
+  }
+
+  dynamicResultImages.hidden = false;
+  dynamicResultImages.innerHTML = resultImages.map((result) => {
+    const resultText = formatResultImageText(result);
+
+    return `
+      <article class="result-card" data-result-card>
+        <img
+          class="result-image"
+          src="${escapeHtml(result.imageUrl)}"
+          alt="${escapeHtml(`${resultText} result`)}"
+        >
+        <button class="result-overlay" type="button" data-result-toggle aria-label="${escapeHtml(`Show ${resultText} result`)}">
+          ${escapeHtml(formatResultOverlayText(result))}
+        </button>
+      </article>
+    `;
+  }).join("");
+}
+
+function formatResultImageText(result) {
+  return `${result.home} ${result.homeScore} ${result.away} ${result.awayScore}`;
+}
+
+function formatResultOverlayText(result) {
+  return `${result.home} ${result.homeScore}-${result.awayScore} ${result.away}`;
 }
 
 pageLinks.forEach((link) => {
@@ -1377,18 +1469,26 @@ Object.entries(fantasyOfficeViews).forEach(([year, view]) => {
   });
 });
 
-resultCards.forEach((card) => {
-  const toggle = card.querySelector("[data-result-toggle]");
+resultsPage?.addEventListener("click", (event) => {
+  const toggle = event.target.closest("[data-result-toggle]");
 
-  toggle?.addEventListener("click", () => {
-    const shouldShow = !card.classList.contains("is-result-visible");
+  if (!toggle) {
+    return;
+  }
 
-    resultCards.forEach((resultCard) => {
-      resultCard.classList.remove("is-result-visible");
-    });
+  const card = toggle.closest("[data-result-card]");
 
-    card.classList.toggle("is-result-visible", shouldShow);
+  if (!card) {
+    return;
+  }
+
+  const shouldShow = !card.classList.contains("is-result-visible");
+
+  resultsPage.querySelectorAll("[data-result-card]").forEach((resultCard) => {
+    resultCard.classList.remove("is-result-visible");
   });
+
+  card.classList.toggle("is-result-visible", shouldShow);
 });
 
 managerResultsRows?.addEventListener("click", (event) => {
@@ -1551,12 +1651,17 @@ loadSheet("matchResults")
 loadSheetText("data")
   .then((csvText) => {
     siteData.rounds = parseRoundOptions(csvText);
+    siteData.resultImages = parseResultImages(csvText);
     renderStandingsRoundOptions(siteData.rounds);
+    renderResultImages(siteData.resultImages);
     renderFilteredStandings();
-    console.info("Box This Lap round data loaded", siteData.rounds);
+    console.info("Box This Lap data sheet loaded", {
+      resultImages: siteData.resultImages,
+      rounds: siteData.rounds,
+    });
   })
   .catch((error) => {
-    console.error("Box This Lap round data failed to load", error);
+    console.error("Box This Lap data sheet failed to load", error);
   });
 
 Promise.all([
