@@ -1549,10 +1549,10 @@ function compareResultImagesByMatchId(firstResult, secondResult) {
   const secondId = Number(secondResult.matchId);
 
   if (Number.isFinite(firstId) && Number.isFinite(secondId) && firstId !== secondId) {
-    return firstId - secondId;
+    return secondId - firstId;
   }
 
-  return String(firstResult.matchId).localeCompare(String(secondResult.matchId), undefined, { numeric: true });
+  return String(secondResult.matchId).localeCompare(String(firstResult.matchId), undefined, { numeric: true });
 }
 
 function renderStandingsRoundOptions(rounds) {
