@@ -1583,7 +1583,88 @@ function renderUpdatedTime(value) {
     return;
   }
 
-  updatedTime.textContent = `Updated ${value}`;
+  updatedTime.textContent = `Updated ${formatUpdatedTime(value)}`;
+}
+
+function formatUpdatedTime(value) {
+  const text = String(value ?? "").trim().replace(/^updated\s+/i, "").replace(/\s+ET$/i, "");
+  const dateTime = parseUpdatedDateTime(text);
+
+  if (!dateTime) {
+    return `${text} ET`;
+  }
+
+  return `${dateTime.monthName} ${dateTime.day}, ${dateTime.year} ${formatUpdatedClockTime(dateTime.hour, dateTime.minute)} ET`;
+}
+
+function parseUpdatedDateTime(value) {
+  const slashMatch = String(value).match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2})(?::(\d{2}))?(?::\d{2})?\s*(AM|PM)?)?$/i);
+
+  if (slashMatch) {
+    return buildUpdatedDateTime({
+      day: slashMatch[2],
+      hour: slashMatch[4],
+      meridiem: slashMatch[6],
+      minute: slashMatch[5],
+      month: slashMatch[1],
+      year: slashMatch[3],
+    });
+  }
+
+  const isoMatch = String(value).match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T](\d{1,2})(?::(\d{2}))?(?::\d{2})?\s*(AM|PM)?)?$/i);
+
+  if (isoMatch) {
+    return buildUpdatedDateTime({
+      day: isoMatch[3],
+      hour: isoMatch[4],
+      meridiem: isoMatch[6],
+      minute: isoMatch[5],
+      month: isoMatch[2],
+      year: isoMatch[1],
+    });
+  }
+
+  return null;
+}
+
+function buildUpdatedDateTime({ day, hour, meridiem, minute, month, year }) {
+  const numericYear = Number(year) < 100 ? 2000 + Number(year) : Number(year);
+  const numericMonth = Number(month);
+  const numericDay = Number(day);
+  const numericMinute = minute === undefined ? 0 : Number(minute);
+  let numericHour = hour === undefined ? 0 : Number(hour);
+
+  if (!numericYear || numericMonth < 1 || numericMonth > 12 || numericDay < 1 || numericDay > 31 || numericMinute < 0 || numericMinute > 59) {
+    return null;
+  }
+
+  if (meridiem) {
+    const period = meridiem.toUpperCase();
+    numericHour = numericHour % 12;
+
+    if (period === "PM") {
+      numericHour += 12;
+    }
+  }
+
+  if (numericHour < 0 || numericHour > 23) {
+    return null;
+  }
+
+  return {
+    day: numericDay,
+    hour: numericHour,
+    minute: numericMinute,
+    monthName: new Intl.DateTimeFormat("en-US", { month: "long", timeZone: "UTC" }).format(new Date(Date.UTC(numericYear, numericMonth - 1, 1))),
+    year: numericYear,
+  };
+}
+
+function formatUpdatedClockTime(hour, minute) {
+  const period = hour >= 12 ? "PM" : "AM";
+  const displayHour = hour % 12 || 12;
+
+  return `${displayHour}:${String(minute).padStart(2, "0")} ${period}`;
 }
 
 function parseResultImages(csvText) {
