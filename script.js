@@ -682,7 +682,7 @@ function parseFormulaOneWeeklySheet(csvText) {
         break;
       }
 
-      entries.push({
+      const entry = {
         manager,
         picks: {
           p1: entryRow[1]?.trim() ?? "",
@@ -698,20 +698,35 @@ function parseFormulaOneWeeklySheet(csvText) {
           wildcardRace: entryRow[11]?.trim() ?? "",
         },
         total: parsePoints(entryRow[19]),
-      });
+      };
+
+      if (hasFormulaOneWeeklyPicks(entry)) {
+        entries.push(entry);
+      }
     }
 
-    races.push({
-      entries,
-      id: roundId,
-      name: `Round ${roundId}`,
-    });
+    if (entries.length > 0) {
+      races.push({
+        entries,
+        id: roundId,
+        name: `Round ${roundId}`,
+      });
+    }
   }
 
   return {
     races,
     standings: getFormulaOneWeeklyStandings(races),
   };
+}
+
+function hasFormulaOneWeeklyPicks(entry) {
+  return Boolean(
+    entry.picks.p1 ||
+    entry.picks.p2 ||
+    entry.picks.p3 ||
+    entry.picks.wildcard
+  );
 }
 
 function getFormulaOneWeeklyStandings(races) {
@@ -971,7 +986,7 @@ function setFormulaOne2025ResultsMode(mode) {
   formulaOne2025ResultsMode = mode === "weekly" ? "weekly" : "yearly";
 
   formulaOneViews[2025]?.resultsModeButtons?.forEach((button) => {
-    const isActive = button.dataset.formulaOne2025ResultsMode === formulaOne2025ResultsMode;
+    const isActive = button.getAttribute("data-formula-one-2025-results-mode") === formulaOne2025ResultsMode;
     button.classList.toggle("is-active", isActive);
     button.setAttribute("aria-pressed", String(isActive));
   });
@@ -1657,7 +1672,7 @@ Object.entries(formulaOneViews).forEach(([year, view]) => {
 
   view.resultsModeButtons?.forEach((button) => {
     button.addEventListener("click", () => {
-      setFormulaOne2025ResultsMode(button.dataset.formulaOne2025ResultsMode);
+      setFormulaOne2025ResultsMode(button.getAttribute("data-formula-one-2025-results-mode"));
     });
   });
 });
