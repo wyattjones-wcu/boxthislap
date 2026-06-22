@@ -566,12 +566,31 @@ main {
   padding: 9px 10px;
 }
 
+.formula-one-results-toggle {
+  display: flex;
+  gap: 8px;
+  margin: -6px 0 18px;
+}
+
 .formula-one-question-list {
   display: grid;
   gap: 16px;
 }
 
+.formula-one-weekly-list {
+  display: grid;
+  gap: 16px;
+}
+
 .formula-one-question-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 8px 18px var(--shadow);
+  overflow: hidden;
+}
+
+.formula-one-weekly-card {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -586,20 +605,30 @@ main {
   padding: 16px;
 }
 
-.formula-one-question-card header span {
+.formula-one-weekly-card header {
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+}
+
+.formula-one-question-card header span,
+.formula-one-weekly-card header span {
   color: var(--accent-dark);
   font-size: 0.75rem;
   font-weight: 900;
   text-transform: uppercase;
 }
 
-.formula-one-question-card h3 {
+.formula-one-question-card h3,
+.formula-one-weekly-card h3 {
   font-size: 1.15rem;
   line-height: 1.25;
   margin: 0;
 }
 
-.formula-one-question-card p {
+.formula-one-question-card p,
+.formula-one-weekly-card p {
   color: var(--muted);
   margin: 0;
 }
@@ -638,6 +667,68 @@ main {
   font-size: 1.05rem;
   line-height: 1.2;
   text-align: right;
+}
+
+.formula-one-weekly-managers {
+  display: grid;
+}
+
+.formula-one-weekly-entry {
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.formula-one-weekly-entry:last-child {
+  border-bottom: 0;
+}
+
+.formula-one-weekly-manager {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.formula-one-weekly-manager strong {
+  color: var(--accent-dark);
+  font-size: 1.1rem;
+}
+
+.formula-one-weekly-picks {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.formula-one-weekly-pick {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px;
+}
+
+.formula-one-weekly-pick span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.formula-one-weekly-pick strong {
+  font-size: 0.86rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.formula-one-weekly-pick em {
+  color: var(--accent-dark);
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 900;
 }
 
 .office-draft-grid,
@@ -1490,6 +1581,10 @@ tr:last-child td {
     text-align: center;
   }
 
+  .formula-one-results-toggle {
+    margin-top: 0;
+  }
+
   .fantasy-critic-summary {
     grid-template-columns: 58px minmax(0, 1fr) 78px;
     padding: 13px;
@@ -1522,6 +1617,15 @@ tr:last-child td {
     gap: 10px;
     grid-template-columns: minmax(0, 1fr) 48px;
     padding: 12px 13px;
+  }
+
+  .formula-one-weekly-card header,
+  .formula-one-weekly-entry {
+    padding: 13px;
+  }
+
+  .formula-one-weekly-picks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .office-draft-grid {

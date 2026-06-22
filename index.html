@@ -11,7 +11,7 @@
         document.documentElement.dataset.theme = "dark";
       }
     </script>
-    <link rel="stylesheet" href="styles.css?v=202606210002">
+    <link rel="stylesheet" href="styles.css?v=202606210003">
   </head>
   <body class="is-routing">
     <header class="site-header">
@@ -78,6 +78,7 @@
         </div>
         <div class="nav-links" data-nav-scope="formula-one-2025" role="tablist" aria-label="Formula 1 sections" hidden>
           <a href="#formula-1-2025-questions" data-page-link="formula-1-2025-questions" role="tab">Questions</a>
+          <a href="#formula-1-2025-weekly" data-page-link="formula-1-2025-weekly" role="tab">Weekly</a>
           <a href="#formula-1-2025-results" data-page-link="formula-1-2025-results" role="tab">Results</a>
           <a href="#leagues" data-page-link="leagues" role="tab">Leagues</a>
         </div>
@@ -792,6 +793,11 @@
           </div>
         </div>
 
+        <div class="formula-one-results-toggle" role="group" aria-label="Formula 1 result type">
+          <button class="tab is-active" type="button" data-formula-one-2025-results-mode="yearly" aria-pressed="true">Yearly</button>
+          <button class="tab" type="button" data-formula-one-2025-results-mode="weekly" aria-pressed="false">Weekly</button>
+        </div>
+
         <div class="table-wrap standings-table">
           <table>
             <thead>
@@ -807,6 +813,21 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </section>
+
+      <section class="page league-detail-page" id="formula-1-2025-weekly" data-page="formula-1-2025-weekly">
+        <div class="league-detail-heading">
+          <div>
+            <h2>Formula 1</h2>
+            <p>2025 Weekly</p>
+          </div>
+        </div>
+
+        <div class="formula-one-weekly-list" id="formula-one-2025-weekly-list">
+          <article class="formula-one-question-card">
+            <p class="table-message">Loading Formula 1 weekly picks...</p>
+          </article>
         </div>
       </section>
 
@@ -968,6 +989,6 @@
       </div>
     </footer>
 
-    <script type="module" src="script.js?v=202606210002"></script>
+    <script type="module" src="script.js?v=202606210003"></script>
   </body>
 </html>
