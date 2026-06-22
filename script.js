@@ -1344,7 +1344,18 @@ function parseResultImages(csvText) {
     });
   }
 
-  return resultImages;
+  return resultImages.sort(compareResultImagesByMatchId);
+}
+
+function compareResultImagesByMatchId(firstResult, secondResult) {
+  const firstId = Number(firstResult.matchId);
+  const secondId = Number(secondResult.matchId);
+
+  if (Number.isFinite(firstId) && Number.isFinite(secondId) && firstId !== secondId) {
+    return firstId - secondId;
+  }
+
+  return String(firstResult.matchId).localeCompare(String(secondResult.matchId), undefined, { numeric: true });
 }
 
 function renderStandingsRoundOptions(rounds) {
@@ -1614,9 +1625,7 @@ loadPlayers()
     }
 
     if (siteData.matches) {
-      renderMatchesForDate(todayMatchList, siteData.matches, getDateKey(0));
-      renderMatchesForDate(tomorrowMatchList, siteData.matches, getDateKey(1));
-      renderMatchesForDate(matchdayMatchList, siteData.matches, matchdaySelect?.value || "");
+      renderCurrentMatchLists();
     }
 
     console.info("Box This Lap player data loaded", players);
@@ -1630,6 +1639,7 @@ loadSheet("playerPerformances")
   .then((performances) => {
     siteData.playerPerformances = performances;
     renderPlayerChampionship(performances);
+    renderCurrentMatchLists();
     console.info("Box This Lap player performance data loaded", performances);
   })
   .catch((error) => {
@@ -1641,6 +1651,7 @@ loadSheet("matchResults")
   .then((results) => {
     siteData.matchResults = results;
     renderNationsLeague(results);
+    renderCurrentMatchLists();
     console.info("Box This Lap match result data loaded", results);
   })
   .catch((error) => {
@@ -1687,9 +1698,7 @@ Promise.all([
     }
 
     if (siteData.matches) {
-      renderMatchesForDate(todayMatchList, siteData.matches, getDateKey(0));
-      renderMatchesForDate(tomorrowMatchList, siteData.matches, getDateKey(1));
-      renderMatchesForDate(matchdayMatchList, siteData.matches, matchdaySelect?.value || "");
+      renderCurrentMatchLists();
     }
 
     renderManagerResults(siteData.managerResultsSource);
@@ -1703,8 +1712,7 @@ Promise.all([
 loadMatches()
   .then((matches) => {
     siteData.matches = matches;
-    renderMatchesForDate(todayMatchList, matches, getDateKey(0));
-    renderMatchesForDate(tomorrowMatchList, matches, getDateKey(1));
+    renderCurrentMatchLists();
     renderMatchdayPicker(matches);
     renderFilteredStandings();
     console.info("Box This Lap match data loaded", matches);
@@ -1834,6 +1842,16 @@ function renderMatchdayPicker(matches) {
   });
 }
 
+function renderCurrentMatchLists() {
+  if (!siteData.matches) {
+    return;
+  }
+
+  renderMatchesForDate(todayMatchList, siteData.matches, getDateKey(0));
+  renderMatchesForDate(tomorrowMatchList, siteData.matches, getDateKey(1));
+  renderMatchesForDate(matchdayMatchList, siteData.matches, matchdaySelect?.value || "");
+}
+
 function renderMatchesForDate(container, matches, dateKey) {
   if (!container) {
     return;
@@ -1869,7 +1887,7 @@ function renderMatchCard(match) {
   const dataTable = pairs.length > 0 ? `
       <table class="pair-table">
         <tbody>
-          ${renderMatchRows(pairs)}
+          ${renderMatchRows(pairs, match)}
         </tbody>
       </table>
   ` : "";
@@ -1885,21 +1903,117 @@ function renderMatchCard(match) {
   `;
 }
 
-function renderMatchRows(pairs) {
+function renderMatchRows(pairs, match) {
   return pairs.map(([name, manager]) => {
+    const points = getMatchDraftPoints(match, name);
+
     return `
       <tr>
         <th scope="row">${renderMatchDataName(name)}</th>
-        <td>${renderMatchManager(manager)}</td>
+        <td>${renderMatchManager(manager, points)}</td>
       </tr>
     `;
   }).join("");
 }
 
-function renderMatchManager(managerName) {
+function renderMatchManager(managerName, points = null) {
   const manager = getManagerByName(managerName);
+  const pointsMarkup = points === null ? "" : `<span class="match-points">+${escapeHtml(formatPoints(points))} pts</span>`;
+  const managerMarkup = manager ? renderManagerChip(manager) : escapeHtml(managerName);
 
-  return manager ? renderManagerChip(manager) : escapeHtml(managerName);
+  return `
+    <span class="match-manager-result">
+      ${managerMarkup}
+      ${pointsMarkup}
+    </span>
+  `;
+}
+
+function getMatchDraftPoints(match, draftName) {
+  const matchId = getMatchId(match);
+  const playerPoints = getPlayerMatchPoints(matchId, draftName);
+
+  if (playerPoints !== null) {
+    return playerPoints;
+  }
+
+  return getNationMatchPoints(matchId, draftName);
+}
+
+function getPlayerMatchPoints(matchId, draftName) {
+  if (!matchId || !siteData.playerPerformances) {
+    return null;
+  }
+
+  const draftKey = getPlayerNameLookupKey(draftName);
+  const performance = siteData.playerPerformances.find((row) => {
+    return String(row["Match ID"] ?? "").trim() === matchId &&
+      getPlayerNameLookupKey(row.Name) === draftKey;
+  });
+
+  if (!performance) {
+    return null;
+  }
+
+  const points = parsePoints(performance.Points);
+  return Number.isFinite(points) ? points : null;
+}
+
+function getNationMatchPoints(matchId, draftName) {
+  if (!matchId || !siteData.matchResults) {
+    return null;
+  }
+
+  const draftKey = normalizeLookupName(normalizeNationName(draftName));
+  const result = siteData.matchResults.find((row) => {
+    return String(row["Match ID"] ?? "").trim() === matchId &&
+      (
+        normalizeLookupName(normalizeNationName(row.Team)) === draftKey ||
+        normalizeLookupName(normalizeNationName(row.Opponent)) === draftKey
+      );
+  });
+
+  if (!result) {
+    return null;
+  }
+
+  const points = getNationPointsForResult(result, draftName);
+  return Number.isFinite(points) ? points : null;
+}
+
+function getNationPointsForResult(result, nationName) {
+  const nationKey = normalizeLookupName(normalizeNationName(nationName));
+  const teamKey = normalizeLookupName(normalizeNationName(result.Team));
+  const opponentKey = normalizeLookupName(normalizeNationName(result.Opponent));
+  const outcome = String(result.Result || "").trim().toLowerCase();
+  const winnerPoints = getWinnerPoints(result);
+  const penaltyLoserPoints = isPenaltyResult(result) ? 2 : 0;
+
+  if (outcome === "draw" || outcome === "tie") {
+    return nationKey === teamKey || nationKey === opponentKey ? 1 : null;
+  }
+
+  if (outcome === "win") {
+    if (nationKey === teamKey) {
+      return winnerPoints;
+    }
+
+    if (nationKey === opponentKey) {
+      return penaltyLoserPoints;
+    }
+  }
+
+  if (outcome === "lose" || outcome === "loss") {
+    if (nationKey === teamKey) {
+      return penaltyLoserPoints;
+    }
+
+    if (nationKey === opponentKey) {
+      return winnerPoints;
+    }
+  }
+
+  return null;
 }
 
 function renderMatchError(container, error) {
@@ -1927,6 +2041,10 @@ function renderMatchError(container, error) {
 
 function getMatchDate(match) {
   return getField(match, "Date", "date");
+}
+
+function getMatchId(match) {
+  return String(getField(match, "Id", "ID", "id", "Match ID", "Match Id") ?? "").trim();
 }
 
 function compareMatchesByDisplayTime(firstMatch, secondMatch) {
