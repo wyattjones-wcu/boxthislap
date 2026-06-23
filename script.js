@@ -978,12 +978,12 @@ function renderFormulaOneResults(year) {
     return;
   }
 
-  view.resultsRows.innerHTML = standings.map((entry) => {
+  view.resultsRows.innerHTML = standings.map((entry, index) => {
     const manager = getManagerByName(entry.manager) ?? { name: entry.manager };
 
     return `
       <tr>
-        <td data-label="Rank">${escapeHtml(entry.rank)}</td>
+        <td data-label="Rank">${escapeHtml(formatRankDisplay(entry, index, standings))}</td>
         <td data-label="Manager">${renderManagerChip(manager)}</td>
         <td data-label="Points">${escapeHtml(formatPoints(entry.points))}</td>
       </tr>
@@ -1395,7 +1395,7 @@ function renderFantasyOfficeResults(year, results) {
     return;
   }
 
-  view.resultList.innerHTML = results.map((entry) => {
+  view.resultList.innerHTML = results.map((entry, index) => {
     const manager = getManagerByName(entry.manager) ?? { name: entry.manager };
 
     return `
@@ -1403,7 +1403,7 @@ function renderFantasyOfficeResults(year, results) {
         <header class="office-result-summary">
           <div class="fantasy-critic-rank">
             <span>Rank</span>
-            <strong>${escapeHtml(entry.rank)}</strong>
+            <strong>${escapeHtml(formatRankDisplay(entry, index, results))}</strong>
           </div>
           <div class="fantasy-critic-manager">
             ${renderManagerChip(manager)}
@@ -2535,7 +2535,7 @@ function renderPlayerChampionship(performances) {
 
     return `
       <tr class="standing-result-row" data-standing-result-row aria-expanded="false" aria-controls="${detailId}" role="button" tabindex="0">
-        <td data-label="Rank">${player.rank}</td>
+        <td data-label="Rank">${escapeHtml(formatRankDisplay(player, index, rows))}</td>
         <td data-label="Player">${renderPlayerNameWithPosition(player.name, player.position)}</td>
         <td data-label="Team / Manager">${renderStandingDetail(player.team, manager)}</td>
         <td data-label="Matches">${escapeHtml(formatMatchCount(player.matches))}</td>
@@ -2650,6 +2650,10 @@ function rankRows(rows) {
   });
 }
 
+function formatRankDisplay(row, index, rows) {
+  return index > 0 && row.rank === rows[index - 1]?.rank ? "-" : row.rank;
+}
+
 function renderNationsLeague(results) {
   if (!nationsLeagueRows) {
     return;
@@ -2671,7 +2675,7 @@ function renderNationsLeague(results) {
 
     return `
       <tr class="standing-result-row" data-standing-result-row aria-expanded="false" aria-controls="${detailId}" role="button" tabindex="0">
-        <td data-label="Rank">${nation.rank}</td>
+        <td data-label="Rank">${escapeHtml(formatRankDisplay(nation, index, rows))}</td>
         <td data-label="Nation">${escapeHtml(nation.name)}</td>
         <td data-label="Record / Manager">${renderStandingDetail(nation.recordLabel || formatRecord(nation), manager)}</td>
         <td data-label="Matches">${escapeHtml(formatMatchCount(nation.matches))}</td>
@@ -2905,12 +2909,12 @@ function renderManagerResults({ managers, teamDraft, playerDraft, playerPerforma
     return;
   }
 
-  managerResultsRows.innerHTML = rows.map((manager) => {
+  managerResultsRows.innerHTML = rows.map((manager, index) => {
     const detailId = `manager-detail-${escapeHtml(manager.id)}`;
 
     return `
       <tr class="manager-result-row" data-manager-result-row aria-expanded="false" aria-controls="${detailId}" role="button" tabindex="0">
-        <td data-label="Rank">${manager.rank}</td>
+        <td data-label="Rank">${escapeHtml(formatRankDisplay(manager, index, rows))}</td>
         <td data-label="Manager">${renderManagerChip(manager)}</td>
         <td data-label="Points">${escapeHtml(formatPoints(manager.points))}</td>
       </tr>
