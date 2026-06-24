@@ -50,29 +50,15 @@
   {
     "Id": 5,
     "Date": "2026-06-13",
-    "Time": "9 PM",
-    "Home": "Haiti",
-    "Away": "Scotland",
+    "Time": "3 PM",
+    "Home": "Qatar",
+    "Away": "Switzerland",
     "Data": {
-      "Scotland": "Luisa",
-      "Ben Gannon-Doak\n(Scotland)": "Jonathan"
+      "Switzerland": "Jonathan"
     }
   },
   {
     "Id": 6,
-    "Date": "2026-06-13",
-    "Time": "12 AM",
-    "Home": "Australia",
-    "Away": "Turkiye",
-    "Data": {
-      "Turkiye": "Luisa",
-      "Australia": "Jonathan",
-      "Jacob Italiano\n(Australia)": "Michael",
-      "Can Uzun\n(Turkiye)": "Jordan"
-    }
-  },
-  {
-    "Id": 7,
     "Date": "2026-06-13",
     "Time": "6 PM",
     "Home": "Brazil",
@@ -86,29 +72,31 @@
     }
   },
   {
+    "Id": 7,
+    "Date": "2026-06-13",
+    "Time": "9 PM",
+    "Home": "Haiti",
+    "Away": "Scotland",
+    "Data": {
+      "Scotland": "Luisa",
+      "Ben Gannon-Doak\n(Scotland)": "Jonathan"
+    }
+  },
+  {
     "Id": 8,
     "Date": "2026-06-13",
-    "Time": "3 PM",
-    "Home": "Qatar",
-    "Away": "Switzerland",
+    "Time": "12 AM",
+    "Home": "Australia",
+    "Away": "Turkiye",
     "Data": {
-      "Switzerland": "Jonathan"
+      "Turkiye": "Luisa",
+      "Australia": "Jonathan",
+      "Jacob Italiano\n(Australia)": "Michael",
+      "Can Uzun\n(Turkiye)": "Jordan"
     }
   },
   {
     "Id": 9,
-    "Date": "2026-06-14",
-    "Time": "7 PM",
-    "Home": "Ivory Coast",
-    "Away": "Ecuador",
-    "Data": {
-      "Ecuador": "Wyatt",
-      "Ivory Coast": "Jonathan",
-      "Piero Hincapie\n(Ecuador)": "Wyatt"
-    }
-  },
-  {
-    "Id": 10,
     "Date": "2026-06-14",
     "Time": "1 PM",
     "Home": "Germany",
@@ -122,7 +110,7 @@
     }
   },
   {
-    "Id": 11,
+    "Id": 10,
     "Date": "2026-06-14",
     "Time": "4 PM",
     "Home": "Netherlands",
@@ -132,6 +120,18 @@
       "Japan": "Michael",
       "Junya Ito\n(Japan)": "Jordan",
       "Takefusa Kubo\n(Japan)": "Jonathan"
+    }
+  },
+  {
+    "Id": 11,
+    "Date": "2026-06-14",
+    "Time": "7 PM",
+    "Home": "Ivory Coast",
+    "Away": "Ecuador",
+    "Data": {
+      "Ecuador": "Wyatt",
+      "Ivory Coast": "Jonathan",
+      "Piero Hincapie\n(Ecuador)": "Wyatt"
     }
   },
   {
@@ -147,16 +147,6 @@
   {
     "Id": 13,
     "Date": "2026-06-15",
-    "Time": "6 PM",
-    "Home": "Saudi Arabia",
-    "Away": "Uruguay",
-    "Data": {
-      "Uruguay": "Sean"
-    }
-  },
-  {
-    "Id": 14,
-    "Date": "2026-06-15",
     "Time": "12 PM",
     "Home": "Spain",
     "Away": "Cape Verde",
@@ -167,17 +157,7 @@
     }
   },
   {
-    "Id": 15,
-    "Date": "2026-06-15",
-    "Time": "9 PM",
-    "Home": "Iran",
-    "Away": "New Zealand",
-    "Data": {
-      "Tim Payne\n(New Zealand)": "Jordan"
-    }
-  },
-  {
-    "Id": 16,
+    "Id": 14,
     "Date": "2026-06-15",
     "Time": "3 PM",
     "Home": "Belgium",
@@ -185,6 +165,26 @@
     "Data": {
       "Belgium": "Wyatt",
       "Thibaut Courtois\n(Belgium)": "Wyatt"
+    }
+  },
+  {
+    "Id": 15,
+    "Date": "2026-06-15",
+    "Time": "6 PM",
+    "Home": "Saudi Arabia",
+    "Away": "Uruguay",
+    "Data": {
+      "Uruguay": "Sean"
+    }
+  },
+  {
+    "Id": 16,
+    "Date": "2026-06-15",
+    "Time": "9 PM",
+    "Home": "Iran",
+    "Away": "New Zealand",
+    "Data": {
+      "Tim Payne\n(New Zealand)": "Jordan"
     }
   },
   {
@@ -240,10 +240,18 @@
   {
     "Id": 21,
     "Date": "2026-06-17",
-    "Time": "7 PM",
-    "Home": "Ghana",
-    "Away": "Panama",
-    "Data": {}
+    "Time": "1 PM",
+    "Home": "Portugal",
+    "Away": "DR Congo",
+    "Data": {
+      "Portugal": "Sean",
+      "Diogo Costa\n(Portugal)": "Sean",
+      "Nuno Mendes\n(Portugal)": "Jonathan",
+      "Bruno Fernandes\n(Portugal)": "Sean",
+      "Ruben Dias\n(Portugal)": "Luisa",
+      "Charles Pickel\n(DR Congo)": "Michael",
+      "Vitinha\n(Portugal)": "Wyatt"
+    }
   },
   {
     "Id": 22,
@@ -263,18 +271,10 @@
   {
     "Id": 23,
     "Date": "2026-06-17",
-    "Time": "1 PM",
-    "Home": "Portugal",
-    "Away": "DR Congo",
-    "Data": {
-      "Portugal": "Sean",
-      "Diogo Costa\n(Portugal)": "Sean",
-      "Nuno Mendes\n(Portugal)": "Jonathan",
-      "Bruno Fernandes\n(Portugal)": "Sean",
-      "Ruben Dias\n(Portugal)": "Luisa",
-      "Charles Pickel\n(DR Congo)": "Michael",
-      "Vitinha\n(Portugal)": "Wyatt"
-    }
+    "Time": "7 PM",
+    "Home": "Ghana",
+    "Away": "Panama",
+    "Data": {}
   },
   {
     "Id": 24,
@@ -335,14 +335,13 @@
   {
     "Id": 29,
     "Date": "2026-06-19",
-    "Time": "8:30 PM",
-    "Home": "Brazil",
-    "Away": "Haiti",
+    "Time": "3 PM",
+    "Home": "USA",
+    "Away": "Australia",
     "Data": {
-      "Brazil": "Jordan",
-      "Gabriel Magalhães\n(Brazil)": "Sean",
-      "Neymar\n(Brazil)": "Jonathan",
-      "Vini Jr\n(Brazil)": "Michael"
+      "Australia": "Jonathan",
+      "USA": "Wyatt",
+      "Jacob Italiano\n(Australia)": "Michael"
     }
   },
   {
@@ -360,6 +359,19 @@
   {
     "Id": 31,
     "Date": "2026-06-19",
+    "Time": "8:30 PM",
+    "Home": "Brazil",
+    "Away": "Haiti",
+    "Data": {
+      "Brazil": "Jordan",
+      "Gabriel Magalhães\n(Brazil)": "Sean",
+      "Neymar\n(Brazil)": "Jonathan",
+      "Vini Jr\n(Brazil)": "Michael"
+    }
+  },
+  {
+    "Id": 32,
+    "Date": "2026-06-19",
     "Time": "11 PM",
     "Home": "Turkiye",
     "Away": "Paraguay",
@@ -370,19 +382,18 @@
     }
   },
   {
-    "Id": 32,
-    "Date": "2026-06-19",
-    "Time": "3 PM",
-    "Home": "USA",
-    "Away": "Australia",
+    "Id": 33,
+    "Date": "2026-06-20",
+    "Time": "1 PM",
+    "Home": "Netherlands",
+    "Away": "Sweden",
     "Data": {
-      "Australia": "Jonathan",
-      "USA": "Wyatt",
-      "Jacob Italiano\n(Australia)": "Michael"
+      "Netherlands": "Wyatt",
+      "Gabriel Gudmundsson\n(Sweden)": "Jonathan"
     }
   },
   {
-    "Id": 33,
+    "Id": 34,
     "Date": "2026-06-20",
     "Time": "4 PM",
     "Home": "Germany",
@@ -397,7 +408,7 @@
     }
   },
   {
-    "Id": 34,
+    "Id": 35,
     "Date": "2026-06-20",
     "Time": "8 PM",
     "Home": "Ecuador",
@@ -405,17 +416,6 @@
     "Data": {
       "Ecuador": "Wyatt",
       "Piero Hincapie\n(Ecuador)": "Wyatt"
-    }
-  },
-  {
-    "Id": 35,
-    "Date": "2026-06-20",
-    "Time": "1 PM",
-    "Home": "Netherlands",
-    "Away": "Sweden",
-    "Data": {
-      "Netherlands": "Wyatt",
-      "Gabriel Gudmundsson\n(Sweden)": "Jonathan"
     }
   },
   {
@@ -433,16 +433,6 @@
   {
     "Id": 37,
     "Date": "2026-06-21",
-    "Time": "6 PM",
-    "Home": "Uruguay",
-    "Away": "Cape Verde",
-    "Data": {
-      "Uruguay": "Sean"
-    }
-  },
-  {
-    "Id": 38,
-    "Date": "2026-06-21",
     "Time": "12 PM",
     "Home": "Spain",
     "Away": "Saudi Arabia",
@@ -453,7 +443,7 @@
     }
   },
   {
-    "Id": 39,
+    "Id": 38,
     "Date": "2026-06-21",
     "Time": "3 PM",
     "Home": "Belgium",
@@ -461,6 +451,16 @@
     "Data": {
       "Belgium": "Wyatt",
       "Thibaut Courtois\n(Belgium)": "Wyatt"
+    }
+  },
+  {
+    "Id": 39,
+    "Date": "2026-06-21",
+    "Time": "6 PM",
+    "Home": "Uruguay",
+    "Away": "Cape Verde",
+    "Data": {
+      "Uruguay": "Sean"
     }
   },
   {
@@ -476,14 +476,13 @@
   {
     "Id": 41,
     "Date": "2026-06-22",
-    "Time": "8 PM",
-    "Home": "Norway",
-    "Away": "Senegal",
+    "Time": "1 PM",
+    "Home": "Argentina",
+    "Away": "Austria",
     "Data": {
-      "Norway": "Jonathan",
-      "Senegal": "Luisa",
-      "Oscar Bobb\n(Norway)": "Jordan",
-      "Erling Haaland\n(Norway)": "Michael"
+      "Argentina": "Wyatt",
+      "Lionel Messi\n(Argentina)": "Wyatt",
+      "Julián Álvarez\n(Argentina)": "Luisa"
     }
   },
   {
@@ -504,13 +503,14 @@
   {
     "Id": 43,
     "Date": "2026-06-22",
-    "Time": "1 PM",
-    "Home": "Argentina",
-    "Away": "Austria",
+    "Time": "8 PM",
+    "Home": "Norway",
+    "Away": "Senegal",
     "Data": {
-      "Argentina": "Wyatt",
-      "Lionel Messi\n(Argentina)": "Wyatt",
-      "Julián Álvarez\n(Argentina)": "Luisa"
+      "Norway": "Jonathan",
+      "Senegal": "Luisa",
+      "Oscar Bobb\n(Norway)": "Jordan",
+      "Erling Haaland\n(Norway)": "Michael"
     }
   },
   {
@@ -526,6 +526,21 @@
   {
     "Id": 45,
     "Date": "2026-06-23",
+    "Time": "1 PM",
+    "Home": "Portugal",
+    "Away": "Uzbekistan",
+    "Data": {
+      "Portugal": "Sean",
+      "Diogo Costa\n(Portugal)": "Sean",
+      "Nuno Mendes\n(Portugal)": "Jonathan",
+      "Bruno Fernandes\n(Portugal)": "Sean",
+      "Ruben Dias\n(Portugal)": "Luisa",
+      "Vitinha\n(Portugal)": "Wyatt"
+    }
+  },
+  {
+    "Id": 46,
+    "Date": "2026-06-23",
     "Time": "4 PM",
     "Home": "England",
     "Away": "Ghana",
@@ -538,28 +553,13 @@
     }
   },
   {
-    "Id": 46,
+    "Id": 47,
     "Date": "2026-06-23",
     "Time": "7 PM",
     "Home": "Panama",
     "Away": "Croatia",
     "Data": {
       "Croatia": "Luisa"
-    }
-  },
-  {
-    "Id": 47,
-    "Date": "2026-06-23",
-    "Time": "1 PM",
-    "Home": "Portugal",
-    "Away": "Uzbekistan",
-    "Data": {
-      "Portugal": "Sean",
-      "Diogo Costa\n(Portugal)": "Sean",
-      "Nuno Mendes\n(Portugal)": "Jonathan",
-      "Bruno Fernandes\n(Portugal)": "Sean",
-      "Ruben Dias\n(Portugal)": "Luisa",
-      "Vitinha\n(Portugal)": "Wyatt"
     }
   },
   {
@@ -576,6 +576,40 @@
   {
     "Id": 49,
     "Date": "2026-06-24",
+    "Time": "3 PM",
+    "Home": "Switzerland",
+    "Away": "Canada",
+    "Data": {
+      "Switzerland": "Jonathan",
+      "Canada": "Sean"
+    }
+  },
+  {
+    "Id": 50,
+    "Date": "2026-06-24",
+    "Time": "3 PM",
+    "Home": "Bosnia and Herzegovina",
+    "Away": "Qatar",
+    "Data": {
+      "Bosnia": "Michael",
+      "Nidal Celik\n(Bosnia and Herzegovina)": "Jordan",
+      "Benjamin Tahirovic\n(Bosnia and Herzegovina)": "Michael",
+      "Nihad Mujakic\n(Bosnia and Herzegovina)": "Michael"
+    }
+  },
+  {
+    "Id": 51,
+    "Date": "2026-06-24",
+    "Time": "6 PM",
+    "Home": "Morocco",
+    "Away": "Haiti",
+    "Data": {
+      "Morocco": "Michael"
+    }
+  },
+  {
+    "Id": 52,
+    "Date": "2026-06-24",
     "Time": "6 PM",
     "Home": "Scotland",
     "Away": "Brazil",
@@ -589,41 +623,18 @@
     }
   },
   {
-    "Id": 50,
-    "Date": "2026-06-24",
-    "Time": "6 PM",
-    "Home": "Morocco",
-    "Away": "Haiti",
-    "Data": {
-      "Morocco": "Michael"
-    }
-  },
-  {
-    "Id": 51,
-    "Date": "2026-06-24",
-    "Time": "3 PM",
-    "Home": "Switzerland",
-    "Away": "Canada",
-    "Data": {
-      "Switzerland": "Jonathan",
-      "Canada": "Sean"
-    }
-  },
-  {
-    "Id": 52,
-    "Date": "2026-06-24",
-    "Time": "3 PM",
-    "Home": "Bosnia and Herzegovina",
-    "Away": "Qatar",
-    "Data": {
-      "Bosnia": "Michael",
-      "Nidal Celik\n(Bosnia and Herzegovina)": "Jordan",
-      "Benjamin Tahirovic\n(Bosnia and Herzegovina)": "Michael",
-      "Nihad Mujakic\n(Bosnia and Herzegovina)": "Michael"
-    }
-  },
-  {
     "Id": 53,
+    "Date": "2026-06-24",
+    "Time": "9 PM",
+    "Home": "South Africa",
+    "Away": "South Korea",
+    "Data": {
+      "South Korea": "Jordan",
+      "Kim Seung-gyu\n(South Korea)": "Jordan"
+    }
+  },
+  {
+    "Id": 54,
     "Date": "2026-06-24",
     "Time": "9 PM",
     "Home": "Czechia",
@@ -632,17 +643,6 @@
       "Mexico": "Jordan",
       "Guillermo Ochoa\n(Mexico)": "Jonathan",
       "Alexis Vega\n(Mexico)": "Jordan"
-    }
-  },
-  {
-    "Id": 54,
-    "Date": "2026-06-24",
-    "Time": "9 PM",
-    "Home": "South Africa",
-    "Away": "South Korea",
-    "Data": {
-      "South Korea": "Jordan",
-      "Kim Seung-gyu\n(South Korea)": "Jordan"
     }
   },
   {
@@ -675,6 +675,16 @@
     "Id": 57,
     "Date": "2026-06-25",
     "Time": "7 PM",
+    "Home": "Tunisia",
+    "Away": "Netherlands",
+    "Data": {
+      "Netherlands": "Wyatt"
+    }
+  },
+  {
+    "Id": 58,
+    "Date": "2026-06-25",
+    "Time": "7 PM",
     "Home": "Japan",
     "Away": "Sweden",
     "Data": {
@@ -682,16 +692,6 @@
       "Gabriel Gudmundsson\n(Sweden)": "Jonathan",
       "Junya Ito\n(Japan)": "Jordan",
       "Takefusa Kubo\n(Japan)": "Jonathan"
-    }
-  },
-  {
-    "Id": 58,
-    "Date": "2026-06-25",
-    "Time": "7 PM",
-    "Home": "Tunisia",
-    "Away": "Netherlands",
-    "Data": {
-      "Netherlands": "Wyatt"
     }
   },
   {
@@ -749,13 +749,26 @@
   {
     "Id": 63,
     "Date": "2026-06-26",
-    "Time": "11 PM",
-    "Home": "Egypt",
-    "Away": "Iran",
+    "Time": "8 PM",
+    "Home": "Cape Verde",
+    "Away": "Saudi Arabia",
     "Data": {}
   },
   {
     "Id": 64,
+    "Date": "2026-06-26",
+    "Time": "8 PM",
+    "Home": "Uruguay",
+    "Away": "Spain",
+    "Data": {
+      "Spain": "Jonathan",
+      "Uruguay": "Sean",
+      "Pedri\n(Spain)": "Wyatt",
+      "Lamine Yamal\n(Spain)": "Wyatt"
+    }
+  },
+  {
+    "Id": 65,
     "Date": "2026-06-26",
     "Time": "11 PM",
     "Home": "New Zealand",
@@ -767,25 +780,12 @@
     }
   },
   {
-    "Id": 65,
-    "Date": "2026-06-26",
-    "Time": "8 PM",
-    "Home": "Cape Verde",
-    "Away": "Saudi Arabia",
-    "Data": {}
-  },
-  {
     "Id": 66,
     "Date": "2026-06-26",
-    "Time": "8 PM",
-    "Home": "Uruguay",
-    "Away": "Spain",
-    "Data": {
-      "Spain": "Jonathan",
-      "Uruguay": "Sean",
-      "Pedri\n(Spain)": "Wyatt",
-      "Lamine Yamal\n(Spain)": "Wyatt"
-    }
+    "Time": "11 PM",
+    "Home": "Egypt",
+    "Away": "Iran",
+    "Data": {}
   },
   {
     "Id": 67,
@@ -814,27 +814,6 @@
   {
     "Id": 69,
     "Date": "2026-06-27",
-    "Time": "10 PM",
-    "Home": "Algeria",
-    "Away": "Austria",
-    "Data": {}
-  },
-  {
-    "Id": 70,
-    "Date": "2026-06-27",
-    "Time": "10 PN",
-    "Home": "Jordan",
-    "Away": "Argentina",
-    "Data": {
-      "Argentina": "Wyatt",
-      "Jordan": "Jordan",
-      "Lionel Messi\n(Argentina)": "Wyatt",
-      "Julián Álvarez\n(Argentina)": "Luisa"
-    }
-  },
-  {
-    "Id": 71,
-    "Date": "2026-06-27",
     "Time": "7:30 PM",
     "Home": "Colombia",
     "Away": "Portugal",
@@ -849,13 +828,34 @@
     }
   },
   {
-    "Id": 72,
+    "Id": 70,
     "Date": "2026-06-27",
     "Time": "7:30 PM",
     "Home": "DR Congo",
     "Away": "Uzbekistan",
     "Data": {
       "Charles Pickel\n(DR Congo)": "Michael"
+    }
+  },
+  {
+    "Id": 71,
+    "Date": "2026-06-27",
+    "Time": "10 PM",
+    "Home": "Algeria",
+    "Away": "Austria",
+    "Data": {}
+  },
+  {
+    "Id": 72,
+    "Date": "2026-06-27",
+    "Time": "10 PN",
+    "Home": "Jordan",
+    "Away": "Argentina",
+    "Data": {
+      "Argentina": "Wyatt",
+      "Jordan": "Jordan",
+      "Lionel Messi\n(Argentina)": "Wyatt",
+      "Julián Álvarez\n(Argentina)": "Luisa"
     }
   },
   {
