@@ -1448,9 +1448,9 @@ tr:last-child td {
 .site-footer {
   align-items: center;
   border-top: 1px solid var(--line);
-  display: flex;
+  display: grid;
   gap: 16px;
-  justify-content: space-between;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   margin: 0 auto;
   max-width: 1120px;
   padding: 20px;
@@ -1472,6 +1472,22 @@ tr:last-child td {
   width: auto;
 }
 
+.footer-test-toggle {
+  align-items: center;
+  color: var(--muted);
+  display: inline-flex;
+  font-size: 0.85rem;
+  font-weight: 800;
+  gap: 8px;
+  justify-content: center;
+}
+
+.footer-test-toggle input {
+  accent-color: var(--accent);
+  height: 18px;
+  width: 18px;
+}
+
 .theme-control {
   align-items: center;
   color: var(--muted);
@@ -1480,6 +1496,7 @@ tr:last-child td {
   font-weight: 800;
   gap: 10px;
   justify-content: flex-end;
+  justify-self: end;
 }
 
 .theme-toggle {
@@ -1736,7 +1753,6 @@ tr:last-child td {
 
   .site-footer {
     align-items: center;
-    display: flex;
   }
 
   .standings-table {
