@@ -2037,6 +2037,10 @@ function renderFilteredStandings() {
   if (siteData.matchResults) {
     renderNationsLeague(siteData.matchResults);
   }
+
+  if (siteData.managerResultsSource) {
+    renderManagerResults(siteData.managerResultsSource);
+  }
 }
 
 window.addEventListener("hashchange", () => {
@@ -2599,9 +2603,7 @@ function renderPlayerChampionship(performances) {
     return;
   }
 
-  const sourceRows = isBestStandingPerformanceSelected()
-    ? getBestPlayerChampionshipRows(performances)
-    : getPlayerChampionshipRows(filterRowsBySelectedRound(performances));
+  const sourceRows = getCurrentPlayerChampionshipRows(performances);
   const rows = filterStandingRowsByGameScope(sourceRows, getPlayerManager);
 
   if (rows.length === 0) {
@@ -2681,6 +2683,12 @@ function getPlayerChampionshipRows(performances) {
   );
 }
 
+function getCurrentPlayerChampionshipRows(performances) {
+  return isBestStandingPerformanceSelected()
+    ? getBestPlayerChampionshipRows(performances)
+    : getPlayerChampionshipRows(filterRowsBySelectedRound(performances));
+}
+
 function getBestPlayerChampionshipRows(performances) {
   return rankRows(
     getPlayerChampionshipRows(performances)
@@ -2739,9 +2747,7 @@ function renderNationsLeague(results) {
     return;
   }
 
-  const sourceRows = isBestStandingPerformanceSelected()
-    ? getBestNationsLeagueRows(results)
-    : getNationsLeagueRows(filterRowsBySelectedRound(results));
+  const sourceRows = getCurrentNationsLeagueRows(results);
   const rows = filterStandingRowsByGameScope(sourceRows, (nation) => getNationManager(nation.name));
 
   if (rows.length === 0) {
@@ -2894,6 +2900,12 @@ function getNationsLeagueRows(results) {
       .filter((nation) => nation.matches > 0 && nation.points > 0)
       .sort(compareNationStandings)
   );
+}
+
+function getCurrentNationsLeagueRows(results) {
+  return isBestStandingPerformanceSelected()
+    ? getBestNationsLeagueRows(results)
+    : getNationsLeagueRows(filterRowsBySelectedRound(results));
 }
 
 function getBestNationsLeagueRows(results) {
@@ -3148,11 +3160,11 @@ function getManagerResultRows({ managers, teamDraft, playerDraft, playerPerforma
   const includeNations = filter === "all" || filter === "nations";
   const includePlayers = filter === "all" || filter === "players";
   const nationPoints = new Map(
-    getNationsLeagueRows(matchResults).map((nation) => [normalizeLookupName(nation.name), nation.points])
+    getCurrentNationsLeagueRows(matchResults).map((nation) => [normalizeLookupName(nation.name), nation.points])
   );
   const playerPoints = new Map();
 
-  for (const player of getPlayerChampionshipRows(playerPerformances)) {
+  for (const player of getCurrentPlayerChampionshipRows(playerPerformances)) {
     playerPoints.set(String(player.id), player.points);
     playerPoints.set(normalizeLookupName(player.name), player.points);
   }
