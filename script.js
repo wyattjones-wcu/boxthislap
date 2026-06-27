@@ -61,6 +61,7 @@ const matchdayMatchList = document.querySelector("#matchday-match-list");
 const bracketView = document.querySelector("#bracket-view");
 const bracketClearPicks = document.querySelector("#bracket-clear-picks");
 const playerChampionshipRows = document.querySelector("#player-championship-rows");
+const playerPositionFilter = document.querySelector("#player-position-filter");
 const nationsLeagueRows = document.querySelector("#nations-league-rows");
 const managerResultsRows = document.querySelector("#manager-results-rows");
 const managerResultsFilter = document.querySelector("#manager-results-filter");
@@ -2162,6 +2163,12 @@ standingsRoundSelect?.addEventListener("change", () => {
   renderFilteredStandings();
 });
 
+playerPositionFilter?.addEventListener("change", () => {
+  if (siteData.playerPerformances) {
+    renderPlayerChampionship(siteData.playerPerformances);
+  }
+});
+
 nationTestScoringToggle?.addEventListener("change", () => {
   renderFilteredStandings();
   renderCurrentMatchLists();
@@ -2978,7 +2985,9 @@ function renderPlayerChampionship(performances) {
   }
 
   const sourceRows = getCurrentPlayerChampionshipRows(performances);
-  const rows = filterStandingRowsByGameScope(sourceRows, getPlayerManager);
+  const rows = filterPlayerRowsByPosition(
+    filterStandingRowsByGameScope(sourceRows, getPlayerManager)
+  );
 
   if (rows.length === 0) {
     playerChampionshipRows.innerHTML = `<tr><td class="table-message" colspan="5">No player performance data found.</td></tr>`;
@@ -3004,6 +3013,26 @@ function renderPlayerChampionship(performances) {
       </tr>
     `;
   }).join("");
+}
+
+function filterPlayerRowsByPosition(rows) {
+  const position = getSelectedPlayerPosition();
+
+  if (position === "all") {
+    return rows;
+  }
+
+  return rankRows(
+    rows
+      .filter((player) => normalizePlayerPosition(player.position || getPlayerPosition(player)) === position)
+      .map(({ rank, ...player }) => player)
+  );
+}
+
+function getSelectedPlayerPosition() {
+  const position = playerPositionFilter?.value || "all";
+
+  return ["all", "goalkeeper", "defender", "midfielder", "forward"].includes(position) ? position : "all";
 }
 
 function getPlayerChampionshipRows(performances) {
