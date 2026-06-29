@@ -1,4 +1,4 @@
-import { loadMatches, loadPlayers, loadSheet, loadSheetText } from "./dataLoader.js?v=202606180002";
+import { loadPlayers, loadSheet, loadSheetText } from "./dataLoader.js?v=202606180002";
 
 const pageLinks = document.querySelectorAll("[data-page-link]");
 const pages = document.querySelectorAll("[data-page]");
@@ -88,6 +88,24 @@ const BRACKET_ROUNDS = [
   { id: "8", label: "Round 8", matchIds: [103] },
   { id: "9", label: "Round 9", matchIds: [104] },
 ];
+const BRACKET_SLOT_REFERENCES = {
+  89: { home: "Winner M73", away: "Winner M76" },
+  90: { home: "Winner M75", away: "Winner M78" },
+  91: { home: "Winner M74", away: "Winner M77" },
+  92: { home: "Winner M79", away: "Winner M80" },
+  93: { home: "Winner M83", away: "Winner M84" },
+  94: { home: "Winner M81", away: "Winner M82" },
+  95: { home: "Winner M86", away: "Winner M87" },
+  96: { home: "Winner M85", away: "Winner M88" },
+  97: { home: "Winner M89", away: "Winner M90" },
+  98: { home: "Winner M93", away: "Winner M94" },
+  99: { home: "Winner M91", away: "Winner M92" },
+  100: { home: "Winner M95", away: "Winner M96" },
+  101: { home: "Winner M97", away: "Winner M98" },
+  102: { home: "Winner M99", away: "Winner M100" },
+  103: { home: "Loser M101", away: "Loser M102" },
+  104: { home: "Winner M101", away: "Winner M102" },
+};
 
 const MANAGER_COLORS = {
   jonathan: "#000000",
@@ -2352,14 +2370,17 @@ loadSheetText("data")
     siteData.roundMappings = parseRoundMappings(csvText);
     siteData.resultImages = parseResultImages(csvText);
     siteData.bracketMatches = parseScheduleMatches(csvText);
+    siteData.matches = siteData.bracketMatches;
     renderUpdatedTime(siteData.updatedTime);
     renderStandingsRoundOptions(siteData.rounds);
     renderResultImages(siteData.resultImages);
+    renderMatchdayPicker(siteData.matches);
     renderBracket(siteData.bracketMatches);
     renderCurrentMatchLists();
     renderFilteredStandings();
     console.info("Box This Lap data sheet loaded", {
       bracketMatches: siteData.bracketMatches,
+      matches: siteData.matches,
       resultImages: siteData.resultImages,
       roundMappings: siteData.roundMappings,
       rounds: siteData.rounds,
@@ -2367,6 +2388,10 @@ loadSheetText("data")
     });
   })
   .catch((error) => {
+    siteData.matchesError = error;
+    renderMatchError(todayMatchList, error);
+    renderMatchError(tomorrowMatchList, error);
+    renderMatchError(matchdayMatchList, error);
     renderBracketError(error);
     console.error("Box This Lap data sheet failed to load", error);
   });
@@ -2394,32 +2419,13 @@ Promise.all([
       renderNationsLeague(siteData.matchResults);
     }
 
-    if (siteData.matches) {
-      renderCurrentMatchLists();
-    }
-
+    renderCurrentMatchLists();
     renderManagerResults(siteData.managerResultsSource);
     console.info("Box This Lap manager result data loaded", { managers, teamDraft, playerDraft });
   })
   .catch((error) => {
     renderManagerResultsError(error);
     console.error("Box This Lap manager result data failed to load", error);
-  });
-
-loadMatches()
-  .then((matches) => {
-    siteData.matches = matches;
-    renderCurrentMatchLists();
-    renderMatchdayPicker(matches);
-    renderFilteredStandings();
-    console.info("Box This Lap match data loaded", matches);
-  })
-  .catch((error) => {
-    siteData.matchesError = error;
-    renderMatchError(todayMatchList, error);
-    renderMatchError(tomorrowMatchList, error);
-    renderMatchError(matchdayMatchList, error);
-    console.error("Box This Lap match data failed to load", error);
   });
 
 loadSheetText("formulaOne2024")
@@ -2830,13 +2836,84 @@ function renderBracket(matches = siteData.bracketMatches) {
   }
 
   const matchById = getMatchesById(matches);
-  const picks = getBracketPicks();
+  const picks = getResolvedBracketPicks(matches, matchById);
 
   bracketView.innerHTML = `
     <div class="bracket-grid">
       ${BRACKET_ROUNDS.map((round) => renderBracketRound(round, matchById, picks)).join("")}
     </div>
   `;
+}
+
+function getResolvedBracketPicks(matches, matchById) {
+  const savedPicks = getBracketPicks();
+  const inferredPicks = inferBracketPicksFromSchedule(matches, matchById, savedPicks);
+
+  return { ...savedPicks, ...inferredPicks };
+}
+
+function inferBracketPicksFromSchedule(matches, matchById, savedPicks = {}) {
+  const inferredPicks = {};
+
+  for (let pass = 0; pass < 4; pass += 1) {
+    const picks = { ...savedPicks, ...inferredPicks };
+    let changed = false;
+
+    for (const match of matches) {
+      const slotReferences = BRACKET_SLOT_REFERENCES[getMatchId(match)];
+
+      if (!slotReferences) {
+        continue;
+      }
+
+      for (const side of ["home", "away"]) {
+        const entrant = getField(match, side === "home" ? "Home" : "Away", side);
+        const reference = parseBracketReference(slotReferences[side]);
+        const pick = inferBracketPickFromEntrant(entrant, reference, matchById, picks);
+
+        if (pick && inferredPicks[pick.matchId] !== pick.side) {
+          inferredPicks[pick.matchId] = pick.side;
+          changed = true;
+        }
+      }
+    }
+
+    if (!changed) {
+      break;
+    }
+  }
+
+  return inferredPicks;
+}
+
+function inferBracketPickFromEntrant(entrant, reference, matchById, picks) {
+  const entrantName = normalizeLookupName(normalizeNationName(entrant));
+
+  if (!entrantName || !reference || parseBracketReference(entrant)) {
+    return null;
+  }
+
+  const sourceMatch = matchById.get(String(reference.matchId));
+
+  if (!sourceMatch) {
+    return null;
+  }
+
+  const home = resolveBracketEntrant(getField(sourceMatch, "Home", "home"), matchById, picks);
+  const away = resolveBracketEntrant(getField(sourceMatch, "Away", "away"), matchById, picks);
+  const homeMatches = normalizeLookupName(normalizeNationName(home.label)) === entrantName;
+  const awayMatches = normalizeLookupName(normalizeNationName(away.label)) === entrantName;
+
+  if (!homeMatches && !awayMatches) {
+    return null;
+  }
+
+  const entrantSide = homeMatches ? "home" : "away";
+
+  return {
+    matchId: String(reference.matchId),
+    side: reference.type === "winner" ? entrantSide : entrantSide === "home" ? "away" : "home",
+  };
 }
 
 function renderBracketRound(round, matchById, picks) {
@@ -3040,11 +3117,11 @@ function renderMatchCard(match) {
   const home = getField(match, "Home", "home") || "Home";
   const away = getField(match, "Away", "away") || "Away";
   const time = getField(match, "Time", "time") || "Time TBD";
-  const pairs = Object.entries(getField(match, "Data", "data") || {});
-  const dataTable = pairs.length > 0 ? `
+  const entries = getMatchDraftEntries(match);
+  const dataTable = entries.length > 0 ? `
       <table class="pair-table">
         <tbody>
-          ${renderMatchRows(pairs, match)}
+          ${renderMatchRows(entries)}
         </tbody>
       </table>
   ` : "";
@@ -3060,23 +3137,21 @@ function renderMatchCard(match) {
   `;
 }
 
-function renderMatchRows(pairs, match) {
-  return pairs.map(([name, manager]) => {
-    const points = getMatchDraftPoints(match, name);
-
+function renderMatchRows(entries) {
+  return entries.map((entry) => {
     return `
       <tr>
-        <th scope="row">${renderMatchDataName(name)}</th>
-        <td>${renderMatchManager(manager, points)}</td>
+        <th scope="row">${renderMatchDataName(entry.name)}</th>
+        <td>${renderMatchManager(entry.manager, entry.points)}</td>
       </tr>
     `;
   }).join("");
 }
 
-function renderMatchManager(managerName, points = null) {
-  const manager = getManagerByName(managerName);
+function renderMatchManager(managerSource, points = null) {
+  const manager = typeof managerSource === "string" ? getManagerByName(managerSource) : managerSource;
   const pointsMarkup = points === null ? "" : `<span class="match-points">+${escapeHtml(formatPoints(points))} pts</span>`;
-  const managerMarkup = manager ? renderManagerChip(manager) : escapeHtml(managerName);
+  const managerMarkup = manager ? renderManagerChip(manager) : escapeHtml(managerSource);
 
   return `
     <span class="match-manager-result">
@@ -3084,6 +3159,119 @@ function renderMatchManager(managerName, points = null) {
       ${pointsMarkup}
     </span>
   `;
+}
+
+function getMatchDraftEntries(match) {
+  if (!siteData.managerDrafts || !siteData.teamDraft || !siteData.playerDraft) {
+    return [];
+  }
+
+  const matchRoundId = getStandingSourceRoundId({ "Match ID": getMatchId(match) });
+  const teamOrder = getMatchTeamKeys(match);
+  const teamOrderIndex = new Map(teamOrder.map((teamKey, index) => [teamKey, index]));
+  const entries = [];
+
+  for (const draft of siteData.teamDraft) {
+    const nation = normalizeNationName(draft.Team);
+    const nationKey = normalizeLookupName(nation);
+
+    if (
+      !nation ||
+      !teamOrderIndex.has(nationKey) ||
+      !isDraftActiveForMatchRound(draft, matchRoundId, "nation")
+    ) {
+      continue;
+    }
+
+    entries.push({
+      manager: getManagerForDraft(draft),
+      name: nation,
+      order: teamOrderIndex.get(nationKey),
+      points: getNationDraftMatchPoints(draft, match),
+      typeOrder: 0,
+    });
+  }
+
+  for (const draft of siteData.playerDraft) {
+    const player = String(draft.Player ?? "").trim();
+    const nation = normalizeNationName(draft.Nation);
+    const nationKey = normalizeLookupName(nation);
+
+    if (
+      !player ||
+      !nation ||
+      !teamOrderIndex.has(nationKey) ||
+      !isDraftActiveForMatchRound(draft, matchRoundId, "player")
+    ) {
+      continue;
+    }
+
+    entries.push({
+      manager: getManagerForDraft(draft),
+      name: `${player}\n(${nation})`,
+      order: teamOrderIndex.get(nationKey),
+      points: getPlayerDraftMatchPoints(draft, match),
+      typeOrder: 1,
+    });
+  }
+
+  return entries.sort((firstEntry, secondEntry) => {
+    if (firstEntry.order !== secondEntry.order) {
+      return firstEntry.order - secondEntry.order;
+    }
+
+    if (firstEntry.typeOrder !== secondEntry.typeOrder) {
+      return firstEntry.typeOrder - secondEntry.typeOrder;
+    }
+
+    return firstEntry.name.localeCompare(secondEntry.name);
+  });
+}
+
+function getMatchTeamKeys(match) {
+  return [
+    normalizeLookupName(normalizeNationName(getField(match, "Home", "home"))),
+    normalizeLookupName(normalizeNationName(getField(match, "Away", "away"))),
+  ].filter(Boolean);
+}
+
+function getPlayerDraftMatchPoints(draft, match) {
+  const matchId = getMatchId(match);
+
+  if (!matchId || !siteData.playerPerformances) {
+    return null;
+  }
+
+  const performance = siteData.playerPerformances.find((row) => {
+    return String(row["Match ID"] ?? "").trim() === matchId && isPerformanceForDraft(row, draft);
+  });
+
+  if (!performance) {
+    return null;
+  }
+
+  const points = parsePoints(performance.Points);
+  return Number.isFinite(points) ? points : null;
+}
+
+function getNationDraftMatchPoints(draft, match) {
+  const nation = normalizeNationName(draft.Team);
+  const matchId = getMatchId(match);
+
+  if (!nation || !siteData.matchResults) {
+    return null;
+  }
+
+  const draftKey = normalizeLookupName(nation);
+  const result = siteData.matchResults.find((row) => isNationResultMatchId(row, matchId, draftKey)) ??
+    siteData.matchResults.find((row) => isNationResultMatchTeams(row, match, draftKey));
+
+  if (!result) {
+    return null;
+  }
+
+  const points = getNationPointsForResult(result, nation);
+  return Number.isFinite(points) ? points : null;
 }
 
 function getMatchDraftPoints(match, draftName) {
