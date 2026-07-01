@@ -2033,7 +2033,7 @@ function renderResultImageCard(result, shouldLoadImage = true) {
         alt="${escapeHtml(`${resultText} result`)}"
       >
       <button class="result-overlay" type="button" data-result-toggle aria-label="${escapeHtml(`Show ${resultText} result`)}">
-        ${escapeHtml(formatResultOverlayText(result))}
+        ${formatResultOverlayMarkup(result)}
       </button>
     </article>
   `;
@@ -2065,6 +2065,23 @@ function formatResultImageText(result) {
 
 function formatResultOverlayText(result) {
   return `${result.home} ${result.homeScore}-${result.awayScore} ${result.away}`;
+}
+
+function formatResultOverlayMarkup(result) {
+  if (!hasPenaltyStyleScore(result)) {
+    return escapeHtml(formatResultOverlayText(result));
+  }
+
+  return `
+    <span class="result-overlay-stack">
+      <span>${escapeHtml(`${result.home} ${result.homeScore}`)}</span>
+      <span>${escapeHtml(`${result.away} ${result.awayScore}`)}</span>
+    </span>
+  `;
+}
+
+function hasPenaltyStyleScore(result) {
+  return String(result.homeScore || "").includes("(") || String(result.awayScore || "").includes("(");
 }
 
 pageLinks.forEach((link) => {
