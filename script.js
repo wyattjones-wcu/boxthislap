@@ -2020,9 +2020,10 @@ function renderResultRoundGroup(group, isOpen) {
 
 function renderResultImageCard(result, shouldLoadImage = true) {
   const resultText = formatResultImageText(result);
+  const imageSource = resolveResultImageSource(result.imageUrl);
   const sourceAttribute = shouldLoadImage
-    ? `src="${escapeHtml(result.imageUrl)}"`
-    : `data-src="${escapeHtml(result.imageUrl)}"`;
+    ? `src="${escapeHtml(imageSource)}"`
+    : `data-src="${escapeHtml(imageSource)}"`;
 
   return `
     <article class="result-card" data-result-card>
@@ -2036,6 +2037,16 @@ function renderResultImageCard(result, shouldLoadImage = true) {
       </button>
     </article>
   `;
+}
+
+function resolveResultImageSource(value) {
+  const source = String(value || "").trim();
+
+  if (!source || /^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(source) || source.startsWith("/") || source.startsWith("./") || source.startsWith("../")) {
+    return source;
+  }
+
+  return source.startsWith("assets/") ? source : `assets/${source}`;
 }
 
 function getResultImageRoundId(result) {
