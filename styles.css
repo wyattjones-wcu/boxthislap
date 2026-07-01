@@ -1308,6 +1308,11 @@ main {
   width: 100%;
 }
 
+.result-overlay-stack {
+  display: grid;
+  gap: 0.18em;
+}
+
 .result-card.is-result-visible .result-overlay,
 .result-overlay:focus-visible {
   background: rgba(24, 33, 47, 0.68);
